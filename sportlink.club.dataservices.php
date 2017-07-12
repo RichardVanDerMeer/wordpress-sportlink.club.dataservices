@@ -10,6 +10,7 @@
  * */
 
 // PHP error reporting, should be turned off in production
+// TODO: Turn error reporting off in production
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
@@ -38,7 +39,7 @@ function sportlink_club_dataservices_menu() {
  */
 function sportlink_club_dataservices_options() {
 
-  $sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'));
+  $sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
 
   ?>
   <div class="wrap">
@@ -52,7 +53,7 @@ function sportlink_club_dataservices_options() {
     <h2 class="nav-tab-wrapper">
       <a href="?page=sportlink.club.dataservices&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">Instellingen</a>
       <a href="?page=sportlink.club.dataservices&tab=teams" class="nav-tab <?php echo $active_tab == 'teams' ? 'nav-tab-active' : ''; ?>">Teams</a>
-      <a href="?page=sportlink.club.dataservices&tab=general-shortcodes" class="nav-tab <?php echo $active_tab == 'general-shortcodes' ? 'nav-tab-active' : ''; ?>">Algemene shortcodes</a>
+      <a href="?page=sportlink.club.dataservices&tab=fixtures" class="nav-tab <?php echo $active_tab == 'fixtures' ? 'nav-tab-active' : ''; ?>">Programma</a>
       <a href="?page=sportlink.club.dataservices&tab=team-shortcodes" class="nav-tab <?php echo $active_tab == 'team-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcodes per team</a>
       <a href="?page=sportlink.club.dataservices&tab=match-shortcodes" class="nav-tab <?php echo $active_tab == 'match-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcodes per wedstrijd</a>
       <a href="?page=sportlink.club.dataservices&tab=parameter-shortcodes" class="nav-tab <?php echo $active_tab == 'parameter-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcode parameters</a>
@@ -75,13 +76,21 @@ function sportlink_club_dataservices_options() {
         </td>
       </tr>
 
+
+      <tr valign="top">
+        <th scope="row">Cache-tijd (in minuten)</th>
+        <td>
+          <input type="text" name="sportlink_club_dataservices_cachetime" value="<?php echo esc_attr(get_option('sportlink_club_dataservices_cachetime')); ?>" />
+        </td>
+      </tr>
+
       <?php if ($sportlinkClient->isConnected()) : ?>
       <tr valign="top">
         <th scope="row">Club</th>
         <td>
           <?php echo $sportlinkClient->getClubInfo()->clubnaam; ?>
           <br><br>
-          <img alt="Embedded Image" src="data:image/jpg;base64,<?php echo $sportlinkClient->getClubInfo()->kleinlogo; ?>" />
+          <img alt="<?php echo $sportlinkClient->getClubInfo()->clubnaam; ?>" src="data:image/jpg;base64,<?php echo $sportlinkClient->getClubInfo()->kleinlogo; ?>" />
         </td>
       </tr>
       <?php endif; ?>
@@ -91,6 +100,8 @@ function sportlink_club_dataservices_options() {
     submit_button();
   } elseif( $active_tab == 'teams' ) {
     $sportlinkClient->showTeams();
+  } elseif( $active_tab == 'fixtures' ) {
+    $sportlinkClient->showFixtures();
   }
   ?>
   </form>
@@ -100,8 +111,6 @@ function sportlink_club_dataservices_options() {
 
 function sportlink_club_dataservices_register_settings() { // whitelist options
   register_setting('sportlink.club.dataservices-settings-group', 'sportlink_club_dataservices_key');
-  register_setting('sportlink.club.dataservices-settings-group', 'sportlink_club_dataservices_pathname');
-  register_setting('sportlink.club.dataservices-settings-group', 'sportlink_club_dataservices_clubname');
   register_setting('sportlink.club.dataservices-settings-group', 'sportlink_club_dataservices_cachetime');
 }
 
@@ -113,19 +122,27 @@ class SportlinkClient {
   protected $apiKey;
   private $clubInfo;
   private $isConnected = false;
+  private $teams;
+  private $cacheTime;
 
 
-  public function __construct($apiKey) {
+  public function __construct($apiKey, $cacheTime) {
     $this->apiKey = $apiKey;
+    $this->cacheTime = $cacheTime ? $cacheTime : 30;
 
-    // Check if client can connect to API
-    //  Request all club info
+    $this->connect();
+    if ($this->isConnected()) {
+      $this->clubInfo = $this->requestClubInfo();
+    }
+  }
+
+  // Connect to the API
+  public function connect() {
     $apiInfoURL = SportlinkClient::API_URL . "clubgegevens" . "?client_id=" . $this->apiKey;
     if (!$this->url_exists($apiInfoURL)) {
-      throw new Exception('Sportlink API not found');
+      // throw new Exception("Sportlink API not found");
     } else {
       $this->isConnected = true;
-      $this->clubInfo = $this->requestClubInfo();
     }
   }
 
@@ -136,7 +153,7 @@ class SportlinkClient {
 
   // Request club info
   private function requestClubInfo() {
-    return $this->doRequest("clubgegevens")->gegevens;
+    return $this->doRequest("clubgegevens", true)->gegevens;
   }
 
   // Return club info
@@ -145,16 +162,57 @@ class SportlinkClient {
   }
 
   // Make a request to the Sportlink API
-  public function doRequest($endpoint, $parameters = Array()) {
+  //  or get it from the local cache file
+  public function doRequest($endpoint, $cached = true, $parameters = Array()) {
     if (!$this->isConnected) {
-      throw new Exception('Not connected to Sportlink API');
+      throw new Exception("Not connected to Sportlink API");
     } else {
+      // Build the JSON request string from the given array of parameters
+      // Also build the unique cache filename from the given array of parameters
       $jsonurl = SportlinkClient::API_URL . $endpoint . "?client_id=" . $this->apiKey;
+      $cacheParameters = "";
       foreach ($parameters as $param) {
         $jsonurl .= "&" . $param;
+        $cacheParameters .= "-" . $param;
       }
 
-      $json = file_get_contents($jsonurl);
+      $cachePath = wp_upload_dir()['basedir'] . "/sportlink.club.dataservices/cache/";
+      // Create cache directory if it doesn't exist
+      if (!is_dir($cachePath)) {
+        mkdir($cachePath, 0777, true);
+      }
+
+      $cacheFile = $cachePath . $endpoint . "-" . md5($cacheParameters) . ".json";
+
+      // When we're allowed to use a cached version, check if that version exists and it doesn't exceed max age
+      if ($cached) {
+        if (file_exists($cacheFile)) {
+
+          echo $cacheFile . ": " . intval(date("i", time() - filemtime($cacheFile))) . "<br>";
+
+          // If cache file is older then allowed cache time, refresh it
+          if (intval(date("i", time() - filemtime($cacheFile))) > $this->cacheTime) {
+            $json = file_get_contents($jsonurl);
+
+            // Write the cache file
+            file_put_contents($cacheFile, $json);
+          } else {
+            $jsonurl = $cacheFile;
+            $json = file_get_contents($jsonurl);
+          }
+
+        } else {
+          $json = file_get_contents($jsonurl);
+
+          // Write the cache file
+          file_put_contents($cacheFile, $json);
+        }
+      } else {
+        $json = file_get_contents($jsonurl);
+
+        // Write the cache file
+        file_put_contents($cacheFile, $json);
+      }
 
       return json_decode($json);
     }
@@ -162,7 +220,7 @@ class SportlinkClient {
 
   // Show all teams in regular competition
   public function showTeams() {
-    $teams = $this->doRequest("teams", Array("competitiesoort=regulier"));
+    $this->teams = $this->doRequest("teams", true, Array("competitiesoort=regulier"));
     ?>
     <table class="form-table">
       <thead>
@@ -175,10 +233,10 @@ class SportlinkClient {
       </thead>
       <tbody>
     <?php
-    $this->addAgeCategoryID($teams);
-    $teams = $this->groupTeamsByCategory($teams);
+    $this->addAgeCategoryToTeams($this->teams);
+    $this->teams = $this->orderTeamsByCategory($this->teams);
 
-    foreach ($teams as $team) {
+    foreach ($this->teams as $team) {
     ?>
     <tr valign="top">
       <td><?php echo $this->clubInfo->clubnaam . " " . $team->teamnaam; ?></td>
@@ -193,17 +251,37 @@ class SportlinkClient {
       </tbody>
     </table>
     <?php
+  }
 
+  public function showFixtures() {
+    $fixtures = $this->doRequest("programma", true, Array("aantaldagen=12", "sorteervolgorde=datum-team-tijd", "eigenwedstrijden=nee", "weekoffset=0"));
 
-    // $this->addAgeCategoryID($teams);
-    // $categoryTeams = (array)$this->groupTeamsByCategory($teams);
+    $fixtures = $this->orderFixturesByDateTeam($fixtures);
 
+    // print_r($fixtures);
 
-    // foreach ($categoryTeams as $category) {
-    //   foreach ($category as $team) {
-    //     echo $this->clubInfo->clubnaam . " " . $team->teamnaam . " - " . $team->leeftijdscategorie . "<br>\n";
-    //   }
-    // }
+    ?>
+    <table class="form-table">
+      <thead>
+        <tr valign="top">
+          <th>Datum</th>
+          <th>Wedstrijd</th>
+        </tr>
+      </thead>
+      <tbody>
+    <?php
+    foreach ($fixtures as $fixture) {
+    ?>
+    <tr valign="top">
+      <td><?php echo $fixture->datum; ?></td>
+      <td><?php echo $fixture->wedstrijd; ?></td>
+    </tr>
+    <?php
+    }
+    ?>
+      </tbody>
+    </table>
+    <?php
   }
 
   private function groupFixturesByDate($fixtures) {
@@ -219,7 +297,7 @@ class SportlinkClient {
   }
 
   // Add category ID to all teams
-  private function addAgeCategoryID($teams) {
+  private function addAgeCategoryToTeams($teams) {
     foreach ($teams as $team) {
       switch (strtolower($team->leeftijdscategorie)) {
         case "senioren":
@@ -262,7 +340,7 @@ class SportlinkClient {
   }
 
   // Group teams by category
-  private function groupTeamsByCategory($teams) {
+  private function orderTeamsByCategory($teams) {
     $groupedTeams = new stdClass();
 
     foreach ($teams as $team) {
@@ -280,6 +358,22 @@ class SportlinkClient {
     }
 
     return $flattenedTeams;
+  }
+
+  private function orderFixturesByDateTeam($fixtures) {
+    $this->teams = $this->doRequest("teams", true, Array("competitiesoort=regulier"));
+    $this->addAgeCategoryToTeams($this->teams);
+
+
+    return $this->addAgeCategoryToFixtures($fixtures);
+  }
+
+  private function addAgeCategoryToFixtures($fixtures) {
+    // print_r($this->teams);
+
+    print_r($fixtures);
+
+    return $fixtures;
   }
 
   // Compare by team category order
