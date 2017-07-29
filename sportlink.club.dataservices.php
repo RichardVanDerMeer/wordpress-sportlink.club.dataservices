@@ -14,6 +14,12 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+define("SPORTLINK_PLUGIN_DIR", plugin_dir_path( __FILE__ ));
+
+
+if ( ! class_exists( 'Gamajo_Template_Loader' ) ) {
+  require plugin_dir_path( __FILE__ ) . 'includes/class-gamajo-template-loader.php';
+}
 
 /***********************************************************************
  Admin init functie
@@ -27,12 +33,38 @@ if(is_admin()) {
  Define wordpress options menu
  */
 function sportlink_club_dataservices_menu() {
-  add_options_page('Sportlink Club.Dataservices opties',   // Title in browser tab
-                   'Sportlink Club.Dataservices',          // Title in settings menu
+  add_options_page('Sportlink - KNVB opties',   // Title in browser tab
+                   'Sportlink - KNVB',          // Title in settings menu
                    'manage_options',    // Capability needed to see this menu
                    'sportlink.club.dataservices',     // Slug
                    'sportlink_club_dataservices_options'); // Function to call when rendering this menu
 }
+
+
+/***********************************************************************
+ Register shortcodes
+ */
+function shortcode_sportlink_club_dataservices( $atts ) {
+  $atts = shortcode_atts( array(
+    'type' => 'programma',
+    'template' => '',
+    'team' => '',
+    'poule' => '',
+    'aantalwekenvooruit' => in_array('aantalwekenvooruit', $atts) ? $atts['aantalwekenvooruit'] : 0
+  ), $atts, 'sportlink' );
+
+  $sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
+
+  switch ( $atts['type'] ) {
+    case 'programma':
+      return $sportlinkClient->showFixtures( $atts );
+      break;
+    case 'stand':
+      return $sportlinkClient->showStandings( $atts );
+      break;
+  }
+}
+add_shortcode( 'sportlink', 'shortcode_sportlink_club_dataservices' );
 
 /***********************************************************************
  Rendering options page
@@ -44,7 +76,7 @@ function sportlink_club_dataservices_options() {
   ?>
   <div class="wrap">
 
-    <h2>Sportlink Club.Dataservices</h2>
+    <h2>Sportlink - KNVB</h2>
 
     <?php
     $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'settings';
@@ -88,7 +120,7 @@ function sportlink_club_dataservices_options() {
       <tr valign="top">
         <th scope="row">Club</th>
         <td>
-          <?php echo $sportlinkClient->getClubInfo()->clubnaam; ?>
+          <?php echo $sportlinkClient->getClubInfo()->clubnaam; ?> (<?php echo $sportlinkClient->getClubInfo()->clubcode; ?>)
           <br><br>
           <img alt="<?php echo $sportlinkClient->getClubInfo()->clubnaam; ?>" src="data:image/jpg;base64,<?php echo $sportlinkClient->getClubInfo()->kleinlogo; ?>" />
         </td>
@@ -101,7 +133,7 @@ function sportlink_club_dataservices_options() {
   } elseif( $active_tab == 'teams' ) {
     $sportlinkClient->showTeams();
   } elseif( $active_tab == 'fixtures' ) {
-    $sportlinkClient->showFixtures();
+    $sportlinkClient->showAdminFixtures();
   }
   ?>
   </form>
@@ -124,6 +156,7 @@ class SportlinkClient {
   private $isConnected = false;
   private $teams;
   private $cacheTime;
+  private $template;
 
 
   public function __construct($apiKey, $cacheTime) {
@@ -134,6 +167,8 @@ class SportlinkClient {
     if ($this->isConnected()) {
       $this->clubInfo = $this->requestClubInfo();
     }
+
+    $this->template =  new Sportlink_Template_Loader;
   }
 
   // Connect to the API
@@ -171,9 +206,11 @@ class SportlinkClient {
       // Also build the unique cache filename from the given array of parameters
       $jsonurl = SportlinkClient::API_URL . $endpoint . "?client_id=" . $this->apiKey;
       $cacheParameters = "";
-      foreach ($parameters as $param) {
-        $jsonurl .= "&" . $param;
-        $cacheParameters .= "-" . $param;
+      if (!is_null($parameters)) {
+        foreach ($parameters as $param) {
+          $jsonurl .= "&" . $param;
+          $cacheParameters .= "-" . $param;
+        }
       }
 
       $cachePath = wp_upload_dir()['basedir'] . "/sportlink.club.dataservices/cache/";
@@ -188,26 +225,28 @@ class SportlinkClient {
       if ($cached) {
         if (file_exists($cacheFile)) {
 
-          echo $cacheFile . ": " . intval(date("i", time() - filemtime($cacheFile))) . "<br>";
-
           // If cache file is older then allowed cache time, refresh it
           if (intval(date("i", time() - filemtime($cacheFile))) > $this->cacheTime) {
+            // Request online resource
             $json = file_get_contents($jsonurl);
 
             // Write the cache file
             file_put_contents($cacheFile, $json);
           } else {
+            // If cache file is valid, read that one
             $jsonurl = $cacheFile;
             $json = file_get_contents($jsonurl);
           }
 
         } else {
+          // If cache file is doesn't exist, request online resource
           $json = file_get_contents($jsonurl);
 
           // Write the cache file
           file_put_contents($cacheFile, $json);
         }
       } else {
+        // When we're not allowed to use cached version, request online resource
         $json = file_get_contents($jsonurl);
 
         // Write the cache file
@@ -220,70 +259,67 @@ class SportlinkClient {
 
   // Show all teams in regular competition
   public function showTeams() {
-    $this->teams = $this->doRequest("teams", true, Array("competitiesoort=regulier"));
-    ?>
-    <table class="form-table">
-      <thead>
-        <tr valign="top">
-          <th>Team</th>
-          <th>Teamcode</th>
-          <th>Poulecode</th>
-          <th>Leeftijdscategorie</th>
-        </tr>
-      </thead>
-      <tbody>
-    <?php
+    $this->teams = $this->doRequest("teams", true, null);
+
     $this->addAgeCategoryToTeams($this->teams);
     $this->teams = $this->orderTeamsByCategory($this->teams);
 
-    foreach ($this->teams as $team) {
-    ?>
-    <tr valign="top">
-      <td><?php echo $this->clubInfo->clubnaam . " " . $team->teamnaam; ?></td>
-      <td><?php echo $team->teamcode; ?></td>
-      <td><?php echo $team->poulecode; ?></td>
-      <td><?php echo $team->leeftijdscategorie; ?></td>
-      <td><?php echo $team->leeftijdscategorieid; ?></td>
-    </tr>
-    <?php
-    }
-    ?>
-      </tbody>
-    </table>
-    <?php
+    // Load the correct template
+    $this->template
+      ->set_template_data( $this->teams, 'teams' )
+      ->get_template_part( 'teams' );
   }
 
-  public function showFixtures() {
-    $fixtures = $this->doRequest("programma", true, Array("aantaldagen=12", "sorteervolgorde=datum-team-tijd", "eigenwedstrijden=nee", "weekoffset=0"));
+  // Show the fixtures for the admin-page
+  public function showAdminFixtures() {
+    $fixtures = $this->doRequest("programma", true, Array("aantaldagen=140", "sorteervolgorde=datum-team-tijd", "eigenwedstrijden=nee", "weekoffset=0"));
 
     $fixtures = $this->orderFixturesByDateTeam($fixtures);
 
-    // print_r($fixtures);
-
-    ?>
-    <table class="form-table">
-      <thead>
-        <tr valign="top">
-          <th>Datum</th>
-          <th>Wedstrijd</th>
-        </tr>
-      </thead>
-      <tbody>
-    <?php
-    foreach ($fixtures as $fixture) {
-    ?>
-    <tr valign="top">
-      <td><?php echo $fixture->datum; ?></td>
-      <td><?php echo $fixture->wedstrijd; ?></td>
-    </tr>
-    <?php
-    }
-    ?>
-      </tbody>
-    </table>
-    <?php
+    // Load the correct template
+    $this->template
+      ->set_template_data( $fixtures, 'fixtures' )
+      ->get_template_part( 'fixtures', 'admin' );
   }
 
+  // Show the fixtures
+  public function showFixtures( $atts ) {
+    $atts = shortcode_atts( array(
+      'aantaldagen' => $atts['team'] !== '' ? 365 : 13,
+      'sorteervolgorde' => 'datum-team-tijd',
+      'eigenwedstrijden' => 'nee',
+      'weekoffset' => $atts['aantalwekenvooruit'],
+      'teamcode' => $atts['team'],
+      'template' => ''
+    ), $atts );
+
+    $fixtures = $this->doRequest("programma", true, $this->getRequestArray( $atts ));
+
+    $fixtures = $this->orderFixturesByDateTeam($fixtures);
+
+    // Load the correct template
+    $this->template
+      ->set_template_data( $fixtures, 'fixtures' )
+      ->get_template_part( 'fixtures', $atts['template'] );
+  }
+
+  // Show the standings
+  public function showStandings( $atts ) {
+
+    $atts = shortcode_atts( array(
+      'poulecode' => $atts['poule'],
+      'template' => ''
+    ), $atts );
+
+    $standings = $this->doRequest("poulestand", true, $this->getRequestArray( $atts ));
+
+    // Load the correct template
+    $this->template
+      ->set_template_data( $standings, 'standings' )
+      ->get_template_part( 'standings', $atts['template'] );
+  }
+
+  // Group all fixtures by date
   private function groupFixturesByDate($fixtures) {
     $groupedFixtures = new stdClass();
 
@@ -301,36 +337,52 @@ class SportlinkClient {
     foreach ($teams as $team) {
       switch (strtolower($team->leeftijdscategorie)) {
         case "senioren":
+          $team->{"leeftijdscategorieid"} = 999;
+          break;
         case "senioren vrouwen":
-          $team->{"leeftijdscategorieid"} = 99;
+          $team->{"leeftijdscategorieid"} = 995;
           break;
         case "onder 19":
+          $team->{"leeftijdscategorieid"} = 199;
+          break;
         case "onder 19 meiden":
-          $team->{"leeftijdscategorieid"} = 19;
+          $team->{"leeftijdscategorieid"} = 195;
           break;
         case "onder 17":
+          $team->{"leeftijdscategorieid"} = 179;
+          break;
         case "onder 17 meiden":
-          $team->{"leeftijdscategorieid"} = 17;
+          $team->{"leeftijdscategorieid"} = 175;
           break;
         case "onder 15":
+          $team->{"leeftijdscategorieid"} = 159;
+          break;
         case "onder 15 meiden":
-          $team->{"leeftijdscategorieid"} = 15;
+          $team->{"leeftijdscategorieid"} = 155;
           break;
         case "onder 13":
+          $team->{"leeftijdscategorieid"} = 139;
+          break;
         case "onder 13 meiden":
-          $team->{"leeftijdscategorieid"} = 13;
+          $team->{"leeftijdscategorieid"} = 135;
           break;
         case "onder 11":
+          $team->{"leeftijdscategorieid"} = 119;
+          break;
         case "onder 11 meiden":
-          $team->{"leeftijdscategorieid"} = 11;
+          $team->{"leeftijdscategorieid"} = 115;
           break;
         case "onder 9":
+          $team->{"leeftijdscategorieid"} = 99;
+          break;
         case "onder 9 meiden":
-          $team->{"leeftijdscategorieid"} = 9;
+          $team->{"leeftijdscategorieid"} = 95;
           break;
         case "onder 7":
+          $team->{"leeftijdscategorieid"} = 79;
+          break;
         case "onder 7 meiden":
-          $team->{"leeftijdscategorieid"} = 7;
+          $team->{"leeftijdscategorieid"} = 75;
           break;
         default:
           $team->{"leeftijdscategorieid"} = -1;
@@ -339,9 +391,11 @@ class SportlinkClient {
     }
   }
 
-  // Group teams by category
+  // Order teams by category
   private function orderTeamsByCategory($teams) {
     $groupedTeams = new stdClass();
+
+    usort($teams, array($this, "compareTeamIDs"));
 
     foreach ($teams as $team) {
       if (!property_exists($groupedTeams, strtolower($team->leeftijdscategorieid))) {
@@ -352,28 +406,89 @@ class SportlinkClient {
 
     $flattenedTeams = new stdClass();
     foreach ($groupedTeams as $category) {
+
+      $category = get_object_vars($category);
+
+      usort($category, function($a, $b) {
+        return strcmp($a->teamnaam, $b->teamnaam);
+      });
+
       foreach ($category as $key => $team) {
-        $flattenedTeams->$key = $team;
+        $flattenedTeams->{$team->teamcode} = $team;
       }
     }
 
     return $flattenedTeams;
   }
 
+  // Order fixtures by date first,
+  //   then by team
   private function orderFixturesByDateTeam($fixtures) {
-    $this->teams = $this->doRequest("teams", true, Array("competitiesoort=regulier"));
+    $this->teams = $this->doRequest("teams", true, null);
     $this->addAgeCategoryToTeams($this->teams);
 
 
-    return $this->addAgeCategoryToFixtures($fixtures);
+    $fixtures = $this->addAgeCategoryToFixtures($fixtures);
+
+    $fixturesByDate = new stdClass();
+
+    foreach ($fixtures as $fixture) {
+      if (!property_exists($fixturesByDate, strtolower($fixture->datum))) {
+        $fixturesByDate->{strtolower($fixture->datum)} = new stdClass();
+      }
+      $fixturesByDate->{strtolower($fixture->datum)}->{$fixture->wedstrijdcode} = $fixture;
+    }
+
+    $flattenedFixtures = new stdClass();
+    foreach ($fixturesByDate as $fixtureDate) {
+      $fixtureDate = get_object_vars($fixtureDate);
+
+      usort($fixtureDate, function($a, $b) {
+        if ($a->leeftijdscategorieid == $b->leeftijdscategorieid) {
+          return strcmp($a->teamnaam, $b->teamnaam);
+        }
+        return $a->leeftijdscategorieid > $b->leeftijdscategorieid ? -1 : 1;
+      });
+
+      foreach ($fixtureDate as $key => $fixture) {
+        $flattenedFixtures->{$fixture->wedstrijdcode} = $fixture;
+      }
+    }
+
+    return $flattenedFixtures;
   }
 
+  // Add age category to all fixtures
   private function addAgeCategoryToFixtures($fixtures) {
-    // print_r($this->teams);
+    foreach ($fixtures as $fixture) {
 
-    print_r($fixtures);
+      $team = $this->getTeamFromFixture($fixture);
+      if (!is_null($team)) {
+        $fixture->leeftijdscategorieid = $team->leeftijdscategorieid;
+      }
+    }
 
     return $fixtures;
+  }
+
+  // Find the team involved by this fixture
+  private function getTeamFromFixture($fixture) {
+    foreach($this->teams as $team) {
+      if ($fixture->thuisteamid == $team->teamcode || $fixture->uitteamid == $team->teamcode) {
+        return $team;
+      }
+    }
+
+    return null;
+  }
+
+  // Build an array with all request-parameters to be sent to Sportlink
+  private function getRequestArray( $atts ) {
+    $requestAttributes = Array();
+    foreach ($atts as $key => $value) {
+      $requestAttributes[] = $key . '=' . $value;
+    }
+    return $requestAttributes;
   }
 
   // Compare by team category order
@@ -422,4 +537,52 @@ class SportlinkClient {
       return false;
     }
   }
+}
+
+class Sportlink_Template_Loader extends Gamajo_Template_Loader {
+  /**
+     * Prefix for filter names.
+     *
+     * @since 1.0.0
+     *
+     * @var string
+     */
+    protected $filter_prefix = 'sportlink';
+
+    /**
+     * Directory name where custom templates for this plugin should be found in the theme.
+     *
+     * @since 1.0.0
+     *
+     * @var string
+     */
+    protected $theme_template_directory = 'sportlink';
+
+    /**
+     * Reference to the root directory path of this plugin.
+     *
+     * In this case, `MEAL_PLANNER_PLUGIN_DIR` would be defined in the root plugin file as:
+     *
+     * ~~~
+     * define( 'MEAL_PLANNER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+     * ~~~
+     *
+     * @since 1.0.0
+     *
+     * @var string
+     */
+    protected $plugin_directory = SPORTLINK_PLUGIN_DIR;
+
+    /**
+     * Directory name where templates are found in this plugin.
+     *
+     * Can either be a defined constant, or a relative reference from where the subclass lives.
+     *
+     * e.g. 'templates' or 'includes/templates', etc.
+     *
+     * @since 1.1.0
+     *
+     * @var string
+     */
+    protected $plugin_template_directory = 'templates';
 }
