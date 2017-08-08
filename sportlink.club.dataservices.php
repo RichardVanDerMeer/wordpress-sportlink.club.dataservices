@@ -55,17 +55,21 @@ function shortcode_sportlink_club_dataservices( $atts ) {
 
   $sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
 
+  ob_start();
+
   switch ( $atts['type'] ) {
     case 'programma':
-      return $sportlinkClient->showFixtures( $atts );
+      $sportlinkClient->showFixtures( $atts );
       break;
     case 'stand':
-      return $sportlinkClient->showStandings( $atts );
+      $sportlinkClient->showStandings( $atts );
       break;
     case 'uitslagen':
-      return $sportlinkClient->showResults( $atts );
+      $sportlinkClient->showResults( $atts );
       break;
   }
+
+  return ob_get_clean();
 }
 add_shortcode( 'sportlink', 'shortcode_sportlink_club_dataservices' );
 
