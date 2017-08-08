@@ -62,6 +62,9 @@ function shortcode_sportlink_club_dataservices( $atts ) {
     case 'stand':
       return $sportlinkClient->showStandings( $atts );
       break;
+    case 'uitslagen':
+      return $sportlinkClient->showResults( $atts );
+      break;
   }
 }
 add_shortcode( 'sportlink', 'shortcode_sportlink_club_dataservices' );
@@ -266,19 +269,19 @@ class SportlinkClient {
 
     // Load the correct template
     $this->template
-      ->set_template_data( $this->teams, 'teams' )
-      ->get_template_part( 'teams' );
+      ->set_template_data( array( 'teams' => $this->teams, 'clubInfo' => $this->clubInfo ))
+      ->get_template_part( 'teams', 'admin' );
   }
 
   // Show the fixtures for the admin-page
   public function showAdminFixtures() {
     $fixtures = $this->doRequest("programma", true, Array("aantaldagen=140", "sorteervolgorde=datum-team-tijd", "eigenwedstrijden=nee", "weekoffset=0"));
 
-    $fixtures = $this->orderFixturesByDateTeam($fixtures);
+    $fixtures = $this->orderMatchesByDateTeam($fixtures);
 
     // Load the correct template
     $this->template
-      ->set_template_data( $fixtures, 'fixtures' )
+      ->set_template_data( array( 'fixtures' => $fixtures ))
       ->get_template_part( 'fixtures', 'admin' );
   }
 
@@ -295,12 +298,33 @@ class SportlinkClient {
 
     $fixtures = $this->doRequest("programma", true, $this->getRequestArray( $atts ));
 
-    $fixtures = $this->orderFixturesByDateTeam($fixtures);
+    $fixtures = $this->orderMatchesByDateTeam($fixtures);
 
     // Load the correct template
     $this->template
-      ->set_template_data( $fixtures, 'fixtures' )
+      ->set_template_data( array( 'fixtures' => $fixtures ))
       ->get_template_part( 'fixtures', $atts['template'] );
+  }
+
+  // Show the results
+  public function showResults( $atts ) {
+    $atts = shortcode_atts( array(
+      'aantaldagen' => $atts['team'] !== '' ? 365 : 13,
+      'sorteervolgorde' => 'datum-team-tijd',
+      'eigenwedstrijden' => 'nee',
+      'weekoffset' => $atts['aantalwekenvooruit'],
+      'teamcode' => $atts['team'],
+      'template' => ''
+    ), $atts );
+
+    $results = $this->doRequest("uitslagen", true, $this->getRequestArray( $atts ));
+
+    $results = $this->orderMatchesByDateTeam($results);
+
+    // Load the correct template
+    $this->template
+      ->set_template_data( array( 'results' => $results ))
+      ->get_template_part( 'results', $atts['template'] );
   }
 
   // Show the standings
@@ -315,7 +339,7 @@ class SportlinkClient {
 
     // Load the correct template
     $this->template
-      ->set_template_data( $standings, 'standings' )
+      ->set_template_data( array( 'standings' => $standings ))
       ->get_template_part( 'standings', $atts['template'] );
   }
 
@@ -421,41 +445,41 @@ class SportlinkClient {
     return $flattenedTeams;
   }
 
-  // Order fixtures by date first,
+  // Order matches by date first,
   //   then by team
-  private function orderFixturesByDateTeam($fixtures) {
+  private function orderMatchesByDateTeam($matches) {
     $this->teams = $this->doRequest("teams", true, null);
     $this->addAgeCategoryToTeams($this->teams);
 
 
-    $fixtures = $this->addAgeCategoryToFixtures($fixtures);
+    $matches = $this->addAgeCategoryToFixtures($matches);
 
-    $fixturesByDate = new stdClass();
+    $matchesByDate = new stdClass();
 
-    foreach ($fixtures as $fixture) {
-      if (!property_exists($fixturesByDate, strtolower($fixture->datum))) {
-        $fixturesByDate->{strtolower($fixture->datum)} = new stdClass();
+    foreach ($matches as $match) {
+      if (!property_exists($matchesByDate, strtolower($match->datum))) {
+        $matchesByDate->{strtolower($match->datum)} = new stdClass();
       }
-      $fixturesByDate->{strtolower($fixture->datum)}->{$fixture->wedstrijdcode} = $fixture;
+      $matchesByDate->{strtolower($match->datum)}->{$match->wedstrijdcode} = $match;
     }
 
-    $flattenedFixtures = new stdClass();
-    foreach ($fixturesByDate as $fixtureDate) {
-      $fixtureDate = get_object_vars($fixtureDate);
+    $flattenedMatches = new stdClass();
+    foreach ($matchesByDate as $matchDate) {
+      $matchDate = get_object_vars($matchDate);
 
-      usort($fixtureDate, function($a, $b) {
+      usort($matchDate, function($a, $b) {
         if ($a->leeftijdscategorieid == $b->leeftijdscategorieid) {
           return strcmp($a->teamnaam, $b->teamnaam);
         }
         return $a->leeftijdscategorieid > $b->leeftijdscategorieid ? -1 : 1;
       });
 
-      foreach ($fixtureDate as $key => $fixture) {
-        $flattenedFixtures->{$fixture->wedstrijdcode} = $fixture;
+      foreach ($matchDate as $key => $match) {
+        $flattenedMatches->{$match->wedstrijdcode} = $match;
       }
     }
 
-    return $flattenedFixtures;
+    return $flattenedMatches;
   }
 
   // Add age category to all fixtures

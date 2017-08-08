@@ -4,23 +4,20 @@
       <th>Datum</th>
       <th>Tijd</th>
       <th>Wedstrijd</th>
-      <th>ID</th>
+      <th>Wedstrijdnummer</th>
     </tr>
   </thead>
   <tbody>
 <?php
-foreach ($fixtures as $fixture) {
-  $date = date_create($fixture->wedstrijddatum);
+foreach ($data->fixtures as $fixture) {
 ?>
 <tr valign="top">
   <td>
-    <?php echo $date->format("l d F"); ?>
+    <?php echo date_i18n( 'd M', strtotime($fixture->wedstrijddatum)); ?>
   </td>
-  <td>
-    <?php echo $date->format("H:i"); ?>
-  </td>
+  <td><?php echo $fixture->aanvangstijd; ?></td>
   <td><?php echo $fixture->wedstrijd; ?></td>
-  <td><?php echo $fixture->leeftijdscategorieid; ?></td>
+  <td><?php echo $fixture->wedstrijdnummer; ?></td>
 </tr>
 <?php
 }

@@ -8,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($standings as $standing) { ?>
+    <?php foreach ($data->standings as $standing) { ?>
     <tr class="standings__standing <?php echo $standing->eigenteam == "true" ? "standings__standing--own-team" : ""; ?>">
       <td class="standings__position"><?php echo $standing->positie; ?></td>
       <td class="standings__name"><?php echo $standing->teamnaam; ?></td>

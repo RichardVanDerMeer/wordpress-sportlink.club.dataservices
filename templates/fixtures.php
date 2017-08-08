@@ -8,7 +8,7 @@
   </thead>
   <tbody class="fixtures__body">
 <?php
-foreach ($fixtures as $fixture) {
+foreach ($data->fixtures as $fixture) {
   $date = date_create($fixture->wedstrijddatum);
 ?>
 <tr class="fixtures__fixture">
