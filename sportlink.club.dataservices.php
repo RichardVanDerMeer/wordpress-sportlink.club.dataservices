@@ -50,23 +50,34 @@ function shortcode_sportlink_club_dataservices( $atts ) {
     'template' => '',
     'team' => '',
     'poule' => '',
-    'aantalwekenvooruit' => in_array('aantalwekenvooruit', $atts) ? $atts['aantalwekenvooruit'] : 0
+    'aantalwekenvooruit' => in_array('aantalwekenvooruit', $atts) ? $atts['aantalwekenvooruit'] : 0,
+    'aantaldagen' => in_array('aantaldagen', $atts) ? $atts['aantaldagen'] : '',
   ), $atts, 'sportlink' );
 
-  $sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
 
   ob_start();
+  try {
+    $sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
 
-  switch ( $atts['type'] ) {
-    case 'programma':
-      $sportlinkClient->showFixtures( $atts );
-      break;
-    case 'stand':
-      $sportlinkClient->showStandings( $atts );
-      break;
-    case 'uitslagen':
-      $sportlinkClient->showResults( $atts );
-      break;
+
+    switch ( $atts['type'] ) {
+      case 'programma':
+        $sportlinkClient->showFixtures( $atts );
+        break;
+      case 'stand':
+        $sportlinkClient->showStandings( $atts );
+        break;
+      case 'uitslagen':
+        $sportlinkClient->showResults( $atts );
+        break;
+      case 'programma-uitslagen':
+        $sportlinkClient->showFixturesResults( $atts );
+        break;
+    }
+  } catch (Exception $e) {
+    ?>
+    Er kan momenteel geen verbinding worden gemaakt met de Sportlink API
+    <?php
   }
 
   return ob_get_clean();
@@ -182,7 +193,7 @@ class SportlinkClient {
   public function connect() {
     $apiInfoURL = SportlinkClient::API_URL . "clubgegevens" . "?client_id=" . $this->apiKey;
     if (!$this->url_exists($apiInfoURL)) {
-      // throw new Exception("Sportlink API not found");
+      throw new Exception("Sportlink API not found");
     } else {
       $this->isConnected = true;
     }
@@ -195,7 +206,11 @@ class SportlinkClient {
 
   // Request club info
   private function requestClubInfo() {
-    return $this->doRequest("clubgegevens", true)->gegevens;
+    $clubgegevens = $this->doRequest("clubgegevens", true);
+    if ($clubgegevens) {
+      return $this->doRequest("clubgegevens", true)->gegevens;
+    }
+    return false;
   }
 
   // Return club info
@@ -235,7 +250,12 @@ class SportlinkClient {
           // If cache file is older then allowed cache time, refresh it
           if (intval(date("i", time() - filemtime($cacheFile))) > $this->cacheTime) {
             // Request online resource
-            $json = file_get_contents($jsonurl);
+            try {
+              $json = file_get_contents($jsonurl);
+            } catch (Exception $e) {
+              throw new Exception("Sportlink API endpoint could not be reached", 1);
+            }
+
 
             // Write the cache file
             file_put_contents($cacheFile, $json);
@@ -292,9 +312,9 @@ class SportlinkClient {
   // Show the fixtures
   public function showFixtures( $atts ) {
     $atts = shortcode_atts( array(
-      'aantaldagen' => $atts['team'] !== '' ? 365 : 13,
+      'aantaldagen' => in_array('aantaldagen', $atts) ? $atts['aantaldagen'] : $atts['team'] !== '' ? 365 : 13,
       'sorteervolgorde' => 'datum-team-tijd',
-      'eigenwedstrijden' => 'nee',
+      'eigenwedstrijden' => 'ja',
       'weekoffset' => $atts['aantalwekenvooruit'],
       'teamcode' => $atts['team'],
       'template' => ''
@@ -312,14 +332,23 @@ class SportlinkClient {
 
   // Show the results
   public function showResults( $atts ) {
+    // Calculate the number of weeks since the start of the current season
+    $competition_start_year = date('n') >= 7 ? date('Y') : date('Y') - 1;
+    $number_of_weeks = ceil(abs(strtotime($competition_start_year . '-07-01') - strtotime(date('Y-m-d'))) / 60 / 60 / 24 / 7);
+
+    // Calculate the number of days that have to be shown
+    $number_of_days = $atts['aantaldagen'] !== '' ? $atts['aantaldagen'] : ($atts['team'] !== '' ? $number_of_weeks * 7 : 13);
+
     $atts = shortcode_atts( array(
-      'aantaldagen' => $atts['team'] !== '' ? 365 : 13,
-      'sorteervolgorde' => 'datum-team-tijd',
+      'aantaldagen' => $atts['aantaldagen'],
+      'sorteervolgorde' => 'datum-team-tijd-omgekeerd',
       'eigenwedstrijden' => 'nee',
-      'weekoffset' => $atts['aantalwekenvooruit'],
+      'weekoffset' => $atts['aantalwekenvooruit'] < 0 ? $atts['aantalwekenvooruit'] : ($atts['team'] !== '' ? -$number_of_weeks : -2),
       'teamcode' => $atts['team'],
       'template' => ''
     ), $atts );
+
+    $atts['aantaldagen'] = $number_of_days;
 
     $results = $this->doRequest("uitslagen", true, $this->getRequestArray( $atts ));
 
@@ -329,6 +358,40 @@ class SportlinkClient {
     $this->template
       ->set_template_data( array( 'results' => $results ))
       ->get_template_part( 'results', $atts['template'] );
+  }
+
+  // Show the fixtures and results of today
+  public function showFixturesResults( $atts ) {
+    $atts = shortcode_atts( array(
+      'aantaldagen' => in_array('aantaldagen', $atts) ? $atts['aantaldagen'] : $atts['team'] !== '' ? 365 : 13,
+      'sorteervolgorde' => 'datum-team-tijd',
+      'eigenwedstrijden' => 'ja',
+      'weekoffset' => $atts['aantalwekenvooruit'],
+      'template' => ''
+    ), $atts );
+
+    $resultAtts = shortcode_atts( array(
+      'aantaldagen' => 7,
+      'sorteervolgorde' => 'datum-team-tijd',
+      'eigenwedstrijden' => 'ja',
+      'weekoffset' => -1,
+      'template' => ''
+    ), $atts );
+
+    $fixtures = $this->doRequest("programma", true, $this->getRequestArray( $atts ));
+    $results = $this->doRequest("uitslagen", true, $this->getRequestArray( $resultAtts ));
+
+    $matches = array_merge($fixtures, $results);
+    usort($matches, function($a, $b) {
+      return strcmp($a->datum, $b->datum);
+    });
+
+    $matches = $this->orderMatchesByDateTeam($matches);
+
+    // Load the correct template
+    $this->template
+      ->set_template_data( array( 'fixtures' => $matches ))
+      ->get_template_part( 'fixtures', $atts['template'] );
   }
 
   // Show the standings
@@ -362,59 +425,61 @@ class SportlinkClient {
 
   // Add category ID to all teams
   private function addAgeCategoryToTeams($teams) {
-    foreach ($teams as $team) {
-      switch (strtolower($team->leeftijdscategorie)) {
-        case "senioren":
-          $team->{"leeftijdscategorieid"} = 999;
-          break;
-        case "senioren vrouwen":
-          $team->{"leeftijdscategorieid"} = 995;
-          break;
-        case "onder 19":
-          $team->{"leeftijdscategorieid"} = 199;
-          break;
-        case "onder 19 meiden":
-          $team->{"leeftijdscategorieid"} = 195;
-          break;
-        case "onder 17":
-          $team->{"leeftijdscategorieid"} = 179;
-          break;
-        case "onder 17 meiden":
-          $team->{"leeftijdscategorieid"} = 175;
-          break;
-        case "onder 15":
-          $team->{"leeftijdscategorieid"} = 159;
-          break;
-        case "onder 15 meiden":
-          $team->{"leeftijdscategorieid"} = 155;
-          break;
-        case "onder 13":
-          $team->{"leeftijdscategorieid"} = 139;
-          break;
-        case "onder 13 meiden":
-          $team->{"leeftijdscategorieid"} = 135;
-          break;
-        case "onder 11":
-          $team->{"leeftijdscategorieid"} = 119;
-          break;
-        case "onder 11 meiden":
-          $team->{"leeftijdscategorieid"} = 115;
-          break;
-        case "onder 9":
-          $team->{"leeftijdscategorieid"} = 99;
-          break;
-        case "onder 9 meiden":
-          $team->{"leeftijdscategorieid"} = 95;
-          break;
-        case "onder 7":
-          $team->{"leeftijdscategorieid"} = 79;
-          break;
-        case "onder 7 meiden":
-          $team->{"leeftijdscategorieid"} = 75;
-          break;
-        default:
-          $team->{"leeftijdscategorieid"} = -1;
-          break;
+    if ($teams) {
+      foreach ($teams as $team) {
+        switch (strtolower($team->leeftijdscategorie)) {
+          case "senioren":
+            $team->{"leeftijdscategorieid"} = 999;
+            break;
+          case "senioren vrouwen":
+            $team->{"leeftijdscategorieid"} = 995;
+            break;
+          case "onder 19":
+            $team->{"leeftijdscategorieid"} = 199;
+            break;
+          case "onder 19 meiden":
+            $team->{"leeftijdscategorieid"} = 195;
+            break;
+          case "onder 17":
+            $team->{"leeftijdscategorieid"} = 179;
+            break;
+          case "onder 17 meiden":
+            $team->{"leeftijdscategorieid"} = 175;
+            break;
+          case "onder 15":
+            $team->{"leeftijdscategorieid"} = 159;
+            break;
+          case "onder 15 meiden":
+            $team->{"leeftijdscategorieid"} = 155;
+            break;
+          case "onder 13":
+            $team->{"leeftijdscategorieid"} = 139;
+            break;
+          case "onder 13 meiden":
+            $team->{"leeftijdscategorieid"} = 135;
+            break;
+          case "onder 11":
+            $team->{"leeftijdscategorieid"} = 119;
+            break;
+          case "onder 11 meiden":
+            $team->{"leeftijdscategorieid"} = 115;
+            break;
+          case "onder 9":
+            $team->{"leeftijdscategorieid"} = 99;
+            break;
+          case "onder 9 meiden":
+            $team->{"leeftijdscategorieid"} = 95;
+            break;
+          case "onder 7":
+            $team->{"leeftijdscategorieid"} = 79;
+            break;
+          case "onder 7 meiden":
+            $team->{"leeftijdscategorieid"} = 75;
+            break;
+          default:
+            $team->{"leeftijdscategorieid"} = -1;
+            break;
+        }
       }
     }
   }
@@ -459,27 +524,45 @@ class SportlinkClient {
     $matches = $this->addAgeCategoryToFixtures($matches);
 
     $matchesByDate = new stdClass();
-
-    foreach ($matches as $match) {
-      if (!property_exists($matchesByDate, strtolower($match->datum))) {
-        $matchesByDate->{strtolower($match->datum)} = new stdClass();
-      }
-      $matchesByDate->{strtolower($match->datum)}->{$match->wedstrijdcode} = $match;
-    }
-
     $flattenedMatches = new stdClass();
-    foreach ($matchesByDate as $matchDate) {
-      $matchDate = get_object_vars($matchDate);
 
-      usort($matchDate, function($a, $b) {
-        if ($a->leeftijdscategorieid == $b->leeftijdscategorieid) {
-          return strcmp($a->teamnaam, $b->teamnaam);
+    if ($matches) {
+      foreach ($matches as $match) {
+
+        if (isset($match->uitslag)) {
+          if (!property_exists($matchesByDate, strtolower($match->datum))) {
+            $matchesByDate->{strtolower($match->datum)} = new stdClass();
+          }
+        } else {
+          if (!property_exists($matchesByDate, strtolower($match->kaledatum))) {
+            $matchesByDate->{strtolower($match->kaledatum)} = new stdClass();
+          }
         }
-        return $a->leeftijdscategorieid > $b->leeftijdscategorieid ? -1 : 1;
-      });
+        if (isset($match->uitslag)) {
+          $matchesByDate->{strtolower($match->datum)}->{$match->wedstrijdcode} = $match;
+        } else {
+          $matchesByDate->{strtolower($match->kaledatum)}->{$match->wedstrijdcode} = $match;
+        }
+      }
 
-      foreach ($matchDate as $key => $match) {
-        $flattenedMatches->{$match->wedstrijdcode} = $match;
+      foreach ($matchesByDate as $matchDate) {
+        $matchDate = get_object_vars($matchDate);
+
+        usort($matchDate, function($a, $b) {
+          if (isset($a->leeftijdscategorieid) && isset($b->leeftijdscategorieid)) {
+            if ($a->leeftijdscategorieid == $b->leeftijdscategorieid) {
+              if (isset($a->teamnaam) && isset($b->teamnaam)) {
+                return strcmp($a->teamnaam, $b->teamnaam);
+              }
+              return 0;
+            }
+            return $a->leeftijdscategorieid > $b->leeftijdscategorieid ? -1 : 1;
+          }
+        });
+
+        foreach ($matchDate as $key => $match) {
+          $flattenedMatches->{$match->wedstrijdcode} = $match;
+        }
       }
     }
 
@@ -488,11 +571,13 @@ class SportlinkClient {
 
   // Add age category to all fixtures
   private function addAgeCategoryToFixtures($fixtures) {
-    foreach ($fixtures as $fixture) {
+    if ($fixtures) {
+      foreach ($fixtures as $fixture) {
 
-      $team = $this->getTeamFromFixture($fixture);
-      if (!is_null($team)) {
-        $fixture->leeftijdscategorieid = $team->leeftijdscategorieid;
+        $team = $this->getTeamFromFixture($fixture);
+        if (!is_null($team)) {
+          $fixture->leeftijdscategorieid = $team->leeftijdscategorieid;
+        }
       }
     }
 
@@ -501,9 +586,11 @@ class SportlinkClient {
 
   // Find the team involved by this fixture
   private function getTeamFromFixture($fixture) {
-    foreach($this->teams as $team) {
-      if ($fixture->thuisteamid == $team->teamcode || $fixture->uitteamid == $team->teamcode) {
-        return $team;
+    if ($this->teams) {
+      foreach($this->teams as $team) {
+        if ($fixture->thuisteamid == $team->teamcode || $fixture->uitteamid == $team->teamcode) {
+          return $team;
+        }
       }
     }
 
