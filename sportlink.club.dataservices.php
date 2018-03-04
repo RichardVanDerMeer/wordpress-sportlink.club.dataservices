@@ -104,7 +104,9 @@ function sportlink_club_dataservices_options() {
       <a href="?page=sportlink.club.dataservices&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">Instellingen</a>
       <a href="?page=sportlink.club.dataservices&tab=teams" class="nav-tab <?php echo $active_tab == 'teams' ? 'nav-tab-active' : ''; ?>">Teams</a>
       <a href="?page=sportlink.club.dataservices&tab=fixtures" class="nav-tab <?php echo $active_tab == 'fixtures' ? 'nav-tab-active' : ''; ?>">Programma</a>
-      <a href="?page=sportlink.club.dataservices&tab=results" class="nav-tab <?php echo $active_tab == 'results' ? 'nav-tab-active' : ''; ?>">Uitslagen</a>
+      <a href="?page=sportlink.club.dataservices&tab=team-shortcodes" class="nav-tab <?php echo $active_tab == 'team-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcodes per team</a>
+      <a href="?page=sportlink.club.dataservices&tab=match-shortcodes" class="nav-tab <?php echo $active_tab == 'match-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcodes per wedstrijd</a>
+      <a href="?page=sportlink.club.dataservices&tab=parameter-shortcodes" class="nav-tab <?php echo $active_tab == 'parameter-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcode parameters</a>
     </h2>
   </div>
 
@@ -147,11 +149,9 @@ function sportlink_club_dataservices_options() {
     <?php
     submit_button();
   } elseif( $active_tab == 'teams' ) {
-    $sportlinkClient->showAdminTeams();
+    $sportlinkClient->showTeams();
   } elseif( $active_tab == 'fixtures' ) {
     $sportlinkClient->showAdminFixtures();
-  } elseif( $active_tab == 'results' ) {
-    $sportlinkClient->showAdminResults();
   }
   ?>
   </form>
@@ -285,16 +285,11 @@ class SportlinkClient {
   }
 
   // Show all teams in regular competition
-  public function showAdminTeams() {
+  public function showTeams() {
     $this->teams = $this->doRequest("teams", true, null);
 
     $this->addAgeCategoryToTeams($this->teams);
     $this->teams = $this->orderTeamsByCategory($this->teams);
-
-    foreach ($this->teams as $team) {
-      $competitions = $this->doRequest("teampoulelijst", true, Array("teamcode=" . $team->teamcode, "lokaleteamcode=-1"));
-      $team->competitions = $competitions;
-    }
 
     // Load the correct template
     $this->template
@@ -312,18 +307,6 @@ class SportlinkClient {
     $this->template
       ->set_template_data( array( 'fixtures' => $fixtures ))
       ->get_template_part( 'fixtures', 'admin' );
-  }
-
-  // Show the results for the admin-page
-  public function showAdminResults() {
-    $results = $this->doRequest("uitslagen", true, Array("aantaldagen=19", "sorteervolgorde=datum-team-tijd-omgekeerd", "eigenwedstrijden=nee", "weekoffset=-3"));
-
-    $results = $this->orderMatchesByDateTeam($results);
-
-    // Load the correct template
-    $this->template
-      ->set_template_data( array( 'results' => $results ))
-      ->get_template_part( 'results', 'admin' );
   }
 
   // Show the fixtures
@@ -511,7 +494,15 @@ class SportlinkClient {
       if (!property_exists($groupedTeams, strtolower($team->leeftijdscategorieid))) {
         $groupedTeams->{strtolower($team->leeftijdscategorieid)} = new stdClass();
       }
+
+      if (property_exists($groupedTeams->{strtolower($team->leeftijdscategorieid)}, $team->teamnaam)) {
+        $team->poules = $groupedTeams->{strtolower($team->leeftijdscategorieid)}->{$team->teamnaam}->poules;
+      } else {
+        $team->poules = '';
+      }
+
       $groupedTeams->{strtolower($team->leeftijdscategorieid)}->{$team->teamnaam} = $team;
+      $team->poules .=  $groupedTeams->{strtolower($team->leeftijdscategorieid)}->{$team->teamnaam}->poulecode . ' (' . $groupedTeams->{strtolower($team->leeftijdscategorieid)}->{$team->teamnaam}->competitienaam . ')<br>';
     }
 
     $flattenedTeams = new stdClass();
