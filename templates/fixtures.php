@@ -7,23 +7,23 @@
     </tr>
   </thead>
   <tbody class="fixtures__body">
-<?php
-foreach ($data->fixtures as $fixture) {
-  $date = date_create($fixture->wedstrijddatum);
-?>
-<tr class="fixtures__fixture">
-  <td class="fixtures__date">
-    <?php echo date_i18n( 'd M', strtotime($fixture->wedstrijddatum)); ?>
-  </td>
-  <td class="fixtures__time">
-    <?php echo $date->format("H:i"); ?>
-  </td>
-  <td class="fixtures__match">
-    <?php echo $fixture->wedstrijd; ?>
-  </td>
-</tr>
-<?php
-}
-?>
+    <?php
+    foreach ($data->fixtures as $fixture) {
+      $date = date_create($fixture->wedstrijddatum);
+    ?>
+      <tr class="fixtures__fixture">
+        <td class="fixtures__date">
+          <?php echo date_i18n('d M', strtotime($fixture->wedstrijddatum)); ?>
+        </td>
+        <td class="fixtures__time">
+          <?php echo $date->format("H:i"); ?>
+        </td>
+        <td class="fixtures__match">
+          <?php echo $fixture->wedstrijd; ?>
+        </td>
+      </tr>
+    <?php
+    }
+    ?>
   </tbody>
 </table>
