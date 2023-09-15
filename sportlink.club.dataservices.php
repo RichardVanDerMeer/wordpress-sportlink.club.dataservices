@@ -86,9 +86,7 @@ function shortcode_sportlink_club_dataservices($atts)
 				break;
 		}
 	} catch (Exception $e) {
-?>
-		Er kan momenteel geen verbinding worden gemaakt met de Sportlink API
-	<?php
+		echo '<div class="sportlink-error"><p>Er kan momenteel geen verbinding worden gemaakt met de Sportlink API</p></div>';
 	}
 
 	return ob_get_clean();
@@ -104,10 +102,10 @@ function sportlink_club_dataservices_options()
 	try {
 		$sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
 	} catch (Exception $e) {
-		echo '<div class="error"><p>Er kan momenteel geen verbinding worden gemaakt met de Sportlink API</p></div>';
+		echo '<div class="sportlink-error"><p>Er kan momenteel geen verbinding worden gemaakt met de Sportlink API</p></div>';
 	}
 
-	?>
+?>
 	<div class="wrap">
 
 		<h2>Sportlink - KNVB</h2>
@@ -210,6 +208,8 @@ class SportlinkClient
 	private $ageCategories = array(
 		'senioren' => 999,
 		'senioren vrouwen' => 995,
+		'JO20' => 209,
+		'MO20' => 205,
 		'JO19' => 199,
 		'MO19' => 195,
 		'JO18' => 189,
@@ -332,7 +332,7 @@ class SportlinkClient
 					if (intval(date("i", time() - filemtime($cacheFile))) > $this->cacheTime) {
 						// Request online resource
 						try {
-							$json = file_get_contents($jsonurl, false, stream_context_create($arrContextOptions));
+							$json = @file_get_contents($jsonurl, false, stream_context_create($arrContextOptions));
 						} catch (Exception $e) {
 							throw new Exception("Sportlink API endpoint could not be reached", 1);
 						}
@@ -354,7 +354,7 @@ class SportlinkClient
 				}
 			} else {
 				// When we're not allowed to use cached version, request online resource
-				$json = file_get_contents($jsonurl, false, stream_context_create($arrContextOptions));
+				$json = @file_get_contents($jsonurl, false, stream_context_create($arrContextOptions));
 
 				// Write the cache file
 				file_put_contents($cacheFile, $json);
