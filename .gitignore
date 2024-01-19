@@ -1,3 +1,6 @@
 node_modules
 .sass-cache
 .DS_Store
+/.env.local
+/.env
+/wp-themes
