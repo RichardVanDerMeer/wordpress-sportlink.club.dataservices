@@ -102,6 +102,10 @@ Support for this plugin is very limited. If you have any questions, please file 
 
 ## Version History
 
+- 2024-01-19
+  - Added README.md
+  - Add Docker configuration for local development
+
 - 2017-03-03
   - Initial release
 
