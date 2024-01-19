@@ -10,11 +10,6 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * */
 
-// PHP error reporting, should be turned off in production
-// TODO: Turn error reporting off in production
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
 define("SPORTLINK_PLUGIN_DIR", plugin_dir_path(__FILE__));
 
 
@@ -77,9 +72,6 @@ function shortcode_sportlink_club_dataservices($atts)
 				break;
 			case 'uitslagen':
 				$sportlinkClient->showResults($atts);
-				break;
-			case 'programma-uitslagen':
-				$sportlinkClient->showFixturesResults($atts);
 				break;
 			case 'wedstrijd':
 				$sportlinkClient->showMatchDetail($atts);
@@ -444,41 +436,6 @@ class SportlinkClient
 	}
 
 	// Show the fixtures and results of today
-	public function showFixturesResults($atts)
-	{
-		$atts = shortcode_atts(array(
-			'aantaldagen' => in_array('aantaldagen', $atts) ? $atts['aantaldagen'] : ($atts['team'] !== '' ? 365 : 13),
-			'sorteervolgorde' => 'datum-team-tijd',
-			'eigenwedstrijden' => 'ja',
-			'weekoffset' => $atts['aantalwekenvooruit'],
-			'template' => ''
-		), $atts);
-
-		$resultAtts = shortcode_atts(array(
-			'aantaldagen' => 7,
-			'sorteervolgorde' => 'datum-team-tijd',
-			'eigenwedstrijden' => 'ja',
-			'weekoffset' => -1,
-			'template' => ''
-		), $atts);
-
-		$fixtures = $this->doRequest("programma", true, $this->getRequestArray($atts));
-		$results = $this->doRequest("uitslagen", true, $this->getRequestArray($resultAtts));
-
-		$matches = array_merge($fixtures, $results);
-		usort($matches, function ($a, $b) {
-			return strcmp($a->datum, $b->datum);
-		});
-
-		$matches = $this->orderMatchesByDateTeam($matches);
-
-		// Load the correct template
-		$this->template
-			->set_template_data(array('fixtures' => $matches))
-			->get_template_part('fixtures', $atts['template']);
-	}
-
-	// Show the fixtures and results of today
 	public function showMatchDetail($atts)
 	{
 		$matchAtts = shortcode_atts(array(
@@ -527,20 +484,6 @@ class SportlinkClient
 		$this->template
 			->set_template_data(array('standings' => $standings))
 			->get_template_part('standings', $atts['template']);
-	}
-
-	// Group all fixtures by date
-	private function groupFixturesByDate($fixtures)
-	{
-		$groupedFixtures = new stdClass();
-
-		foreach ($fixtures as $fixture) {
-			if (!property_exists($groupedFixtures, strtolower($fixture->kaledatum))) {
-				$groupedFixtures->{strtolower($fixture->kaledatum)} = new stdClass();
-			}
-			$groupedFixtures->{strtolower($fixture->kaledatum)}->{$fixture->wedstrijdcode} = $fixture;
-		}
-		return $groupedFixtures;
 	}
 
 	// Add category ID to all teams
