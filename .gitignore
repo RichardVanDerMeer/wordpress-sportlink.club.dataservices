@@ -4,3 +4,4 @@ node_modules
 /.env.local
 /.env
 /wp-themes
+/wordpress

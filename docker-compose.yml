@@ -4,22 +4,21 @@ services:
 
   db:
     image: mariadb
-    restart: always
     environment:
       MARIADB_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
       MARIADB_DATABASE: '${DB_DATABASE}'
       MARIADB_USER: '${DB_USER}'
       MARIADB_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - db:/var/lib/mysql
 
   adminer:
     image: adminer
-    restart: always
     ports:
       - 8081:8080
 
   wordpress:
-    image: wordpress:latest
-    restart: always
+    image: wordpress:6.4.2-php8.3
     ports:
       - 8080:80
     environment:
@@ -28,5 +27,26 @@ services:
       WORDPRESS_DB_USER: '${DB_USER}'
       WORDPRESS_DB_PASSWORD: '${DB_PASSWORD}'
     volumes:
-      - ./:/var/www/html/wp-content/plugins/sportlink.club.dataservices
+      - ./src:/var/www/html/wp-content/plugins/sportlink.club.dataservices
+      - ./wordpress:/var/www/html
       - ./wp-themes:/var/www/html/wp-content/themes
+
+  wp-cli:
+    image: wordpress:cli-php8.3
+    depends_on:
+      - wordpress
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: '${DB_DATABASE}'
+      WORDPRESS_DB_USER: '${DB_USER}'
+      WORDPRESS_DB_PASSWORD: '${DB_PASSWORD}'
+    volumes_from:
+      - wordpress
+    volumes:
+      - ./wp-entrypoint.sh:/wp-entrypoint.sh
+    entrypoint: wp --allow-root --path=/var/www/html/ --http=http://localhost
+
+volumes:
+  wordpress:
+  db:
