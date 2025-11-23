@@ -369,10 +369,16 @@ function sportlink_club_dataservices_options()
 	}
 
 	$sportlinkClient = null;
-	try {
-		$sportlinkClient = new SportlinkClient(get_option('sportlink_club_dataservices_key'), get_option('sportlink_club_dataservices_cachetime'));
-	} catch (Exception $e) {
-		echo '<div class="notice notice-error"><p>Er kan momenteel geen verbinding worden gemaakt met de Sportlink API</p></div>';
+	$apiKey = get_option('sportlink_club_dataservices_key');
+
+	// Only create client if API key is set
+	if (!empty($apiKey)) {
+		try {
+			$sportlinkClient = new SportlinkClient($apiKey, get_option('sportlink_club_dataservices_cachetime'));
+		} catch (Exception $e) {
+			echo '<div class="notice notice-error"><p>Er kan momenteel geen verbinding worden gemaakt met de Sportlink API</p></div>';
+			$sportlinkClient = null;
+		}
 	}
 
 ?>
