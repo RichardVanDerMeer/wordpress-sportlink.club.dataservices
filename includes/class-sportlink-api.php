@@ -49,9 +49,16 @@ class Sportlink_API
 	private function request($endpoint, $params = [])
 	{
 		try {
+			// Convert associative array to indexed array of "key=value" strings
+			// SportlinkClient expects ["teamcode=93297", "aantalregels=57"] format
+			$formatted_params = [];
+			foreach ($params as $key => $value) {
+				$formatted_params[] = $key . '=' . $value;
+			}
+
 			// Gebruik de SportlinkClient doRequest methode
 			// Deze heeft alle caching, error handling en circuit breaker logica
-			$result = $this->client->doRequest($endpoint, true, $params);
+			$result = $this->client->doRequest($endpoint, true, $formatted_params);
 
 			// Convert stdClass to array voor consistente interface
 			if (is_object($result)) {
@@ -926,7 +933,7 @@ class Sportlink_API
 	 */
 	public static function create_from_settings()
 	{
-		$client_id = get_option('sportlink_club_dataservices_client_id');
+		$client_id = get_option('sportlink_club_dataservices_key');
 		$cache_time = get_option('sportlink_club_dataservices_cachetime', 30);
 
 		if (empty($client_id)) {

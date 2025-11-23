@@ -29,6 +29,83 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-sportlink-api.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-sportlink-types.php';
 
 /***********************************************************************
+ Register Gutenberg Blocks
+ */
+function sportlink_register_blocks()
+{
+	// Register programma block
+	register_block_type(SPORTLINK_PLUGIN_DIR . 'blocks/programma');
+}
+add_action('init', 'sportlink_register_blocks');
+
+/***********************************************************************
+ Register REST API endpoints
+ */
+function sportlink_register_rest_routes()
+{
+	register_rest_route('sportlink/v1', '/teams', array(
+		'methods' => 'GET',
+		'callback' => 'sportlink_rest_get_teams',
+		'permission_callback' => function () {
+			return current_user_can('edit_posts');
+		}
+	));
+}
+add_action('rest_api_init', 'sportlink_register_rest_routes');
+
+function sportlink_rest_get_teams()
+{
+	$api = Sportlink_API::create_from_settings();
+
+	if (!$api) {
+		return new WP_Error('no_api', __('Sportlink API niet geconfigureerd', 'sportlink'), array('status' => 400));
+	}
+
+	$teams = $api->get_teams();
+
+	if (is_wp_error($teams)) {
+		return $teams;
+	}
+
+	// Convert to simple array for dropdown and make unique by teamcode
+	$team_options = array();
+	$seen_codes = array();
+
+	foreach ($teams as $team) {
+		if (is_object($team)) {
+			$team = (array) $team;
+		}
+
+		$teamcode = $team['teamcode'] ?? '';
+
+		// Skip if we've already seen this teamcode
+		if (in_array($teamcode, $seen_codes)) {
+			continue;
+		}
+
+		$seen_codes[] = $teamcode;
+
+		// Build a more descriptive label
+		$label = $team['teamnaam'] ?? '';
+		if (!empty($team['spelsoort']) && $team['spelsoort'] !== 'VELD') {
+			$label .= ' (' . $team['spelsoort'] . ')';
+		}
+
+		$team_options[] = array(
+			'value' => $teamcode,
+			'label' => $label
+		);
+	}
+
+	// Sort teams by label
+	usort($team_options, function ($a, $b) {
+		return strcmp($a['label'], $b['label']);
+	});
+
+	return rest_ensure_response($team_options);
+}
+
+/***********************************************************************
  Enqueue frontend styles
  */
 function sportlink_enqueue_styles()

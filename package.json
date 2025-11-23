@@ -1,0 +1,22 @@
+{
+	"name": "sportlink-blocks",
+	"version": "1.0.0",
+	"description": "Gutenberg blocks for Sportlink KNVB Club.Dataservices",
+	"scripts": {
+		"build": "wp-scripts build blocks/programma/index.js --output-path=build/programma",
+		"start": "wp-scripts start blocks/programma/index.js --output-path=build/programma",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^31.0.0"
+	},
+	"dependencies": {
+		"@wordpress/block-editor": "^15.8.0",
+		"@wordpress/blocks": "^15.8.0",
+		"@wordpress/components": "^30.8.0",
+		"@wordpress/i18n": "^6.8.0"
+	}
+}

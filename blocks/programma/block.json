@@ -1,0 +1,199 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "sportlink/programma",
+	"version": "1.0.0",
+	"title": "Sportlink Programma",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "Toon het wedstrijdprogramma vanuit Sportlink",
+	"keywords": [
+		"sportlink",
+		"programma",
+		"wedstrijden",
+		"kalender"
+	],
+	"textdomain": "sportlink",
+	"editorScript": "file:../../build/programma/index.js",
+	"editorStyle": "file:../../build/programma/index.css",
+	"render": "file:./render.php",
+	"attributes": {
+		"teamcode": {
+			"type": "string",
+			"default": ""
+		},
+		"aantalregels": {
+			"type": "number",
+			"default": 10
+		},
+		"aantaldagen": {
+			"type": "number",
+			"default": 30
+		},
+		"weekoffset": {
+			"type": "number",
+			"default": 0
+		},
+		"eigenwedstrijden": {
+			"type": "string",
+			"default": "JA",
+			"enum": [
+				"JA",
+				"NEE"
+			]
+		},
+		"thuis": {
+			"type": "string",
+			"default": "JA",
+			"enum": [
+				"JA",
+				"NEE"
+			]
+		},
+		"uit": {
+			"type": "string",
+			"default": "JA",
+			"enum": [
+				"JA",
+				"NEE"
+			]
+		},
+		"spelsoort": {
+			"type": "string",
+			"default": "ALLES",
+			"enum": [
+				"ALLES",
+				"VELD",
+				"ZAAL"
+			]
+		},
+		"competitiesoort": {
+			"type": "string",
+			"default": "ALLES",
+			"enum": [
+				"ALLES",
+				"REGULIER",
+				"BEKER"
+			]
+		},
+		"dagsoort": {
+			"type": "string",
+			"default": "ALLES",
+			"enum": [
+				"ALLES",
+				"ZATERDAG",
+				"ZONDAG"
+			]
+		},
+		"leeftijdscategorie": {
+			"type": "string",
+			"default": "ALLES",
+			"enum": [
+				"ALLES",
+				"SENIOREN",
+				"JUNIOREN"
+			]
+		},
+		"sorteervolgorde": {
+			"type": "string",
+			"default": "datum",
+			"enum": [
+				"datum",
+				"team"
+			]
+		},
+		"gebruiklokaleteamgegevens": {
+			"type": "string",
+			"default": "NEE",
+			"enum": [
+				"JA",
+				"NEE"
+			]
+		},
+		"showTime": {
+			"type": "boolean",
+			"default": true
+		},
+		"showDate": {
+			"type": "boolean",
+			"default": true
+		},
+		"showLocation": {
+			"type": "boolean",
+			"default": true
+		},
+		"showReferee": {
+			"type": "boolean",
+			"default": false
+		},
+		"showField": {
+			"type": "boolean",
+			"default": false
+		},
+		"showRemarks": {
+			"type": "boolean",
+			"default": false
+		},
+		"showCompetition": {
+			"type": "boolean",
+			"default": false
+		},
+		"showLogos": {
+			"type": "boolean",
+			"default": false
+		},
+		"logoWidth": {
+			"type": "number",
+			"default": 60
+		},
+		"showVersus": {
+			"type": "boolean",
+			"default": true
+		},
+		"groupByDate": {
+			"type": "boolean",
+			"default": false
+		},
+		"fontSize": {
+			"type": "string",
+			"default": "medium"
+		},
+		"columnOrder": {
+			"type": "array",
+			"default": [
+				"time",
+				"home",
+				"versus",
+				"away",
+				"location",
+				"field",
+				"referee",
+				"competition",
+				"remarks"
+			]
+		},
+		"displayStyle": {
+			"type": "string",
+			"default": "table",
+			"enum": [
+				"table",
+				"list",
+				"cards"
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": true,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"aantalregels": 5,
+			"aantaldagen": 14
+		}
+	}
+}
