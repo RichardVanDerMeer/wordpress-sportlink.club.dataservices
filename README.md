@@ -1,112 +1,337 @@
-# Sportlink - KNVB
+# Sportlink KNVB Club.Dataservices Plugin
 
-This Wordpress plugin is used to connect to the Sportlink API. It is used to show the fixtures, results and standings of a club, or show details of a match.
+WordPress plugin voor het tonen van wedstrijdprogramma's, uitslagen, standen en meer vanuit de Sportlink Club.Dataservices API.
 
-## Description
+**Versie:** 1.2.0
+**Auteur:** Richard van der Meer
+**Licentie:** GPL v2 or later
 
-This Wordpress plugin is used to connect to the Sportlink API.
+## ✨ Nieuwe Features (v1.2.0)
 
-- [A complete reference of the Sportlink API can be found here](https://dexels.github.io/navajofeeds-json-parser/).
-- [Support for the Sportlink API can be found here](https://sportlinkservices.freshdesk.com/nl/support/solutions/9000107516).
+### 🎯 API Interface Klasse
+Een volledig nieuwe, gestructureerde PHP interface voor de Sportlink API:
 
-## Getting Started
+- **Type-safe methoden** voor alle API endpoints
+- **Autocomplete** in je IDE voor alle beschikbare functies
+- **Duidelijke documentatie** met parameter uitleg
+- **Error handling** ingebouwd
+- **Kant-en-klare voorbeelden** die je direct kunt gebruiken
 
-### Installation
+### 🛡️ Verbeterde Beveiliging
+- Input sanitization op alle user input
+- Output escaping in templates
+- Nonce verificatie voor admin acties
+- API parameter validatie met whitelisting
 
-This Wordpress plugin is currently not available in the Wordpress plugin repository. To install it, download the zip file and upload it to your Wordpress installation.
+### ⚡ Prestatie Optimalisaties
+- WordPress Transients API voor efficiënte caching
+- Request-level caching voorkomt dubbele API calls
+- Lazy loading van team data
+- Geoptimaliseerde HTTP requests
 
-### Configuration
+### 🔒 Resilience Features
+- Circuit breaker pattern (3-failure threshold)
+- Stale cache fallback (tot 7 dagen)
+- Timeout optimization (8 seconden)
+- Dashboard widget voor API status monitoring
 
-After installing the plugin, you need to configure it. Go to the settings page of the plugin (under Settings -> Sportlink - KNVB) and fill in the following fields:
+## 📦 Installatie
 
-- API sleutel: The API key you received from Sportlink
-- Cache-tijd (in minuten): The time in minutes the data is cached. This is to prevent too many requests to the Sportlink API. The default is 30 minutes.
-- SSL-beveiliging overschrijven: In local environments, you might not have a valid SSL certificate. If you want to use the plugin in a local environment and run into problems with a certificate, you can enable this option. This will disable the SSL check. Note: this is not recommended for production environments.
+1. Upload de plugin map naar `/wp-content/plugins/`
+2. Activeer de plugin via WordPress Admin
+3. Ga naar Instellingen → Sportlink
+4. Vul je Sportlink Client ID in
+5. Stel cache tijd in (standaard: 30 minuten)
+6. Sla de instellingen op
 
-### Shortcodes
+## 🚀 Snel Starten
 
-The plugin uses shortcodes to display the data. The following shortcodes are available:
+### Methode 1: Bestaande Shortcodes (Backwards Compatible)
 
-- `[sportlink type="programma"]`: Shows the fixtures of the club
-- `[sportlink type="uitslagen"]`: Shows the results of the club
-- `[sportlink type="stand" poule="1234"]`: Shows the standings of the club
-- `[sportlink type="wedstrijd"]`: Shows the details of a match. The Match ID is grabbed from the URL: `$_GET['wedstrijd']`
-
-## Templates
-
-The plugin uses templates to display the data. The templates are located in the `templates` folder of the plugin. You can override the templates by copying them to your theme folder.
-
-### Default templates
-
-| Shortcode                               | Template                  | Available data                                                                                                                                                                                                                                                                                                                                                                                     |
-| --------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[sportlink type="programma"]`          | `templates/fixtures.php`  | [`$data->fixtures`](https://dexels.github.io/navajofeeds-json-parser/article/?programma)                                                                                                                                                                                                                                                                                                           |
-| `[sportlink type="uitslagen"]`          | `templates/results.php`   | [`$data->results`](https://dexels.github.io/navajofeeds-json-parser/article/?uitslagen)                                                                                                                                                                                                                                                                                                            |
-| `[sportlink type="stand" poule="1234"]` | `templates/standings.php` | [`$data->standings`](https://dexels.github.io/navajofeeds-json-parser/article/?poulestand)                                                                                                                                                                                                                                                                                                         |
-| `[sportlink type="wedstrijd"]`          | `templates/match.php`     | `$data->match`: [ [`wedstrijd-informatie`](https://dexels.github.io/navajofeeds-json-parser/article/?wedstrijd-informatie), [`history`](https://dexels.github.io/navajofeeds-json-parser/article/?wedstrijd-historische-resultaten), [`poule`](https://dexels.github.io/navajofeeds-json-parser/article/?poulestand), [`teams`](https://dexels.github.io/navajofeeds-json-parser/article/?teams) ] |
-
-## Custom templates
-
-The default templates are very basic and should be used as examples. You can override them by copying the default templates from the `templates` folder of the plugin to your (child) theme in a folder called `sportlink-knvb`.
-
-### Templates in shortcodes
-
-In addition to overriding the default templates, you can also modify the template from the shortcode. This is done by adding the `template` attribute to the shortcode. For example:
+De oude shortcodes werken nog steeds:
 
 ```
-[sportlink type="programma" template="small"]
+[sportlink type="programma"]
+[sportlink type="uitslagen"]
+[sportlink type="stand" wedstrijd="123"]
 ```
 
-This will use the `templates/fixtures-small.php` template.
+### Methode 2: Nieuwe API Interface (Aanbevolen)
 
-### PHP
+Gebruik de nieuwe API klasse voor meer flexibiliteit:
 
-The templates are written in PHP. This means you can use PHP functions and variables in the templates. The `$data` variable contains the data from the API. You can use this data to display the information you want.
+```php
+// Maak API instance
+$api = Sportlink_API::create_from_settings();
 
-An example of a template with a bit more logic can be found in the `templates/match.php` template.
+// Haal teams op
+$teams = $api->get_teams([
+    'geslacht' => 'MAN',
+    'leeftijdscategorie' => 'SENIOREN'
+]);
 
-### Available data
+if (!is_wp_error($teams)) {
+    foreach ($teams as $team) {
+        echo $team['teamnaam'] . '<br>';
+    }
+}
+```
 
-The data from the API is available in the `$data` variable. The available data can be found in the 'Available data' column in the table above
+### Methode 3: Quick Start Shortcodes
 
-#### Team logo
-
-There is no team logo available in the API. You can use the following code to get the team logo from the voetbal.nl logo API (replace `{clubcode}` with the correct club code):
+Kopieer kant-en-klare shortcodes uit `examples/quick-start-shortcodes.php`:
 
 ```
-<img src="https://logoapi.voetbal.nl/logo.php?clubcode={clubcode}">
+[sportlink_teams geslacht="MAN"]
+[sportlink_programma teamcode="123" aantal="5"]
+[sportlink_uitslagen teamcode="123"]
+[sportlink_stand poulecode="456"]
+[sportlink_clubinfo]
 ```
 
-## Shortcode attributes
+## 📚 Documentatie
 
-The following attributes are available for the shortcodes:
+### Voor Ontwikkelaars
 
-| Attribute          | Description                                                                       | Default                     |
-| ------------------ | --------------------------------------------------------------------------------- | --------------------------- |
-| type               | The type of data to show. Can be `programma`, `uitslagen`, `stand` or `wedstrijd` | `programma`                 |
-| template           | The template to use. See the 'Templates' section for more information             |                             |
-| team               | The teamcode of the team to show. Only used for the `programma` and `uitslagen`   |                             |
-| aantaldagen        | The number of days to show. Only used for the `programma` and `uitslagen`         | Fixtures: `13`, Team: `365` |
-| aantalwekenvooruit | The week offset. Only used for the `programma` and `uitslagen`                    | `0`                         |
-| poule              | The poule ID. Only used for the `stand`                                           |                             |
+- **[API Interface Documentatie](API-INTERFACE.md)** - Volledige API referentie
+- **[Cheat Sheet](CHEATSHEET.md)** - Snelle referentie voor veelgebruikte calls
+- **[Voorbeelden](examples/)** - Praktische code voorbeelden
 
-## Help
+### API Methoden (Hoogtepunten)
 
-This plugin is not actively maintained and is provided as-is.
+```php
+// Teams & Competitie
+$api->get_teams($args)
+$api->get_team_indeling($teamcode, $lokaleteamcode)
+$api->get_team_gegevens($teamcode, $lokaleteamcode)
 
-Support for this plugin is very limited. If you have any questions, please file an issue on [Github](https://github.com/RichardVanDerMeer/wordpress-sportlink.club.dataservices/issues).
+// Programma & Uitslagen
+$api->get_programma($args)
+$api->get_uitslagen($args)
+$api->get_afgelastingen($args)
 
-## Authors
+// Wedstrijd Details
+$api->get_wedstrijd_informatie($wedstrijdcode)
+$api->get_wedstrijd_thuisteam($wedstrijdcode)
+$api->get_wedstrijd_uitteam($wedstrijdcode)
 
-[Richard van der Meer](https://richardvandermeer.nl)
+// Standen
+$api->get_poulestand($poulecode)
+$api->get_poulelijst()
 
-## Version History
+// Club Gegevens
+$api->get_clubgegevens()
+$api->get_bestuur()
+$api->get_commissies()
 
-- 2024-01-19
-  - Added README.md
-  - Add Docker configuration for local development
+// En 50+ andere methoden...
+```
 
-- 2017-03-03
-  - Initial release
+Zie [API-INTERFACE.md](API-INTERFACE.md) voor alle beschikbare methoden.
 
-- [Gamajo-Template-Loader](https://github.com/GaryJones/Gamajo-Template-Loader)
+## 🎯 Voorbeelden
+
+### Team Lijst met Filter
+
+```php
+$api = Sportlink_API::create_from_settings();
+
+$teams = $api->get_teams([
+    'geslacht' => 'VROUW',
+    'leeftijdscategorie' => 'SENIOREN',
+    'spelsoort' => 'VELD'
+]);
+
+if (!is_wp_error($teams)) {
+    echo '<ul>';
+    foreach ($teams as $team) {
+        echo '<li>' . esc_html($team['teamnaam']) . '</li>';
+    }
+    echo '</ul>';
+}
+```
+
+### Komende 5 Wedstrijden
+
+```php
+$api = Sportlink_API::create_from_settings();
+
+$programma = $api->get_programma([
+    'aantalregels' => 5,
+    'aantaldagen' => 30,
+    'teamcode' => 12345
+]);
+
+if (!is_wp_error($programma)) {
+    foreach ($programma as $wedstrijd) {
+        echo $wedstrijd['datum'] . ' - ' . $wedstrijd['wedstrijd'] . '<br>';
+    }
+}
+```
+
+### Poule Stand
+
+```php
+$api = Sportlink_API::create_from_settings();
+
+$stand = $api->get_poulestand(67890);
+
+if (!is_wp_error($stand)) {
+    echo '<table>';
+    foreach ($stand as $team) {
+        $class = ($team['eigenteam'] ?? false) ? ' class="eigenteam"' : '';
+        echo '<tr' . $class . '>';
+        echo '<td>' . esc_html($team['positie']) . '</td>';
+        echo '<td>' . esc_html($team['teamnaam']) . '</td>';
+        echo '<td>' . esc_html($team['punten']) . '</td>';
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+```
+
+Meer voorbeelden in de `examples/` map.
+
+## ⚠️ Error Handling
+
+**Belangrijk:** Check altijd op fouten!
+
+```php
+$data = $api->get_teams();
+
+if (is_wp_error($data)) {
+    // Log fout
+    error_log('Sportlink Error: ' . $data->get_error_message());
+
+    // Toon gebruiksvriendelijke melding
+    echo '<p>Kon teams niet ophalen. Probeer het later opnieuw.</p>';
+    return;
+}
+
+// Gebruik data
+foreach ($data as $item) {
+    // ...
+}
+```
+
+## 🔧 Configuratie
+
+### WordPress Admin
+
+Ga naar **Instellingen → Sportlink**:
+
+- **Client ID**: Je Sportlink API client ID (verplicht)
+- **Cache Tijd**: Hoe lang data gecached wordt (standaard: 30 minuten)
+- **Cache Leegmaken**: Knop om handmatig cache te legen
+
+### Dashboard Widget
+
+Bekijk de API status in je WordPress dashboard:
+- ✓ Operationeel (groen)
+- ⚡ Instabiel (geel)
+- ⚠️ Niet beschikbaar (rood)
+
+## 🎨 Templates
+
+De plugin gebruikt Gamajo Template Loader voor flexibele templates.
+
+### Template Bestanden
+
+- `templates/fixtures.php` - Wedstrijd programma
+- `templates/standings.php` - Volledige stand
+- `templates/standings-small.php` - Compacte stand
+
+### Custom Templates
+
+Kopieer een template naar je theme:
+```
+/wp-content/themes/jouw-theme/sportlink/standings.php
+```
+
+De plugin gebruikt automatisch je custom template.
+
+## 🔒 Beveiliging
+
+De plugin implementeert WordPress security best practices:
+
+- ✅ Input sanitization (sanitize_key, sanitize_text_field)
+- ✅ Output escaping (esc_html, esc_attr, esc_url)
+- ✅ Nonce verificatie voor admin acties
+- ✅ API parameter whitelisting
+- ✅ Capability checks (manage_options)
+
+## ⚡ Performance
+
+### Caching Strategie
+
+1. **Transients Cache** (30 min): Verse data voor normale situatie
+2. **Stale Cache** (7 dagen): Backup data bij API problemen
+3. **Circuit Breaker**: Automatische fallback bij 3+ fouten
+4. **Request Cache**: Voorkomt dubbele API calls binnen één pageview
+
+### Cache Beheer
+
+- **Automatisch**: Expired transients worden verwijderd
+- **Handmatig**: Admin knop "Cache leegmaken"
+- **Per API key**: Cache wordt geleegd bij API key wijziging
+
+## 📋 Requirements
+
+- **WordPress**: 5.0 of hoger
+- **PHP**: 7.4 of hoger
+- **Sportlink Account**: Met geldige Client ID
+
+## 🆘 Troubleshooting
+
+### "API niet geconfigureerd"
+- Check of Client ID is ingevuld in Instellingen → Sportlink
+- Controleer of de Client ID correct is
+
+### "Kon data niet ophalen"
+- Check het dashboard widget voor API status
+- Kijk in de WordPress debug log voor details
+- Test de API handmatig: `https://data.sportlink.com/clubgegevens?client_id=JOUW_ID`
+
+### Data wordt niet ververst
+- Klik op "Cache leegmaken" in de plugin instellingen
+- Check of de cache tijd niet te hoog is ingesteld
+
+### Circuit breaker actief
+- De API is tijdelijk niet bereikbaar
+- Er wordt automatisch oude cache gebruikt
+- De circuit breaker reset na 5 minuten
+
+## 📝 Changelog
+
+### Version 1.2.0
+- ✨ Nieuwe API Interface klasse toegevoegd
+- 🛡️ Verbeterde beveiliging (input sanitization, output escaping)
+- ⚡ Performance optimalisaties (transients, lazy loading)
+- 🔒 Circuit breaker pattern toegevoegd
+- 📊 Dashboard widget voor API monitoring
+- 📚 Uitgebreide documentatie en voorbeelden
+
+### Version 1.1.0
+- Basis functionaliteit
+- Shortcode support
+- Template systeem
+
+## 🤝 Bijdragen
+
+Suggesties en pull requests zijn welkom!
+
+## 📄 Licentie
+
+GPL v2 or later
+
+## 👤 Auteur
+
+**Richard van der Meer**
+Website: [richardvandermeer.nl](http://richardvandermeer.nl/)
+
+## 🔗 Links
+
+- [Sportlink API Documentatie](https://data.sportlink.com/)
+- [WordPress Plugin Development](https://developer.wordpress.org/plugins/)
+- [API Interface Docs](API-INTERFACE.md)
+- [Cheat Sheet](CHEATSHEET.md)

@@ -1,0 +1,4056 @@
+{
+  "wedstrijd-deelnemers" : {
+    "name" : "wedstrijd-deelnemers",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "relatiecode",
+        "type" : "string",
+        "label" : "Relatiecode"
+      }, {
+        "id" : "volledigenaam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "rol",
+        "type" : "string",
+        "label" : "Rol"
+      }, {
+        "id" : "einddatum",
+        "type" : "date",
+        "label" : "Einddatum"
+      } ]
+    } ]
+  },
+  "keuzelijst-competitiesoorten" : {
+    "name" : "keuzelijst-competitiesoorten",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "keuzelijst-factuurstatussen" : {
+    "name" : "keuzelijst-factuurstatussen",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "keuzelijst-sorteervolgordes" : {
+    "name" : "keuzelijst-sorteervolgordes",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "sorteervolgorde",
+        "type" : "string",
+        "label" : "Sorteervolgorde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "Omschrijving"
+      } ]
+    } ]
+  },
+  "ical-verenigingsactiviteiten" : {
+    "name" : "ical-verenigingsactiviteiten",
+    "input" : [ ],
+    "output" : [ {
+      "Result" : {
+        "iCal" : {
+          "label" : "iCal"
+        }
+      }
+    } ]
+  },
+  "periodestand" : {
+    "name" : "periodestand",
+    "input" : [ {
+      "name" : "poulecode",
+      "description" : "Poulecode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "poulelijst",
+      "sourcekey" : "poulecode"
+    }, {
+      "name" : "periodenummer",
+      "description" : "Periodenummercode",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "-1"
+    } ],
+    "output" : [ {
+      "highlight" : "eigenteam",
+      "columns" : [ {
+        "id" : "positie",
+        "type" : "integer",
+        "label" : "Positie"
+      }, {
+        "id" : "teamcode",
+        "type" : "integer",
+        "label" : "Teamcode"
+      }, {
+        "id" : "poulecode",
+        "type" : "integer",
+        "label" : "Poulecode"
+      }, {
+        "id" : "clubcode",
+        "type" : "string",
+        "label" : "Clubcode"
+      }, {
+        "id" : "clubnaam",
+        "type" : "string",
+        "label" : "Clubnaam"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      }, {
+        "id" : "aantalwedstrijden",
+        "type" : "integer",
+        "label" : "Aantal wedstrijden"
+      }, {
+        "id" : "totaalpunten",
+        "type" : "integer",
+        "label" : "Totaal punten"
+      }, {
+        "id" : "doelpuntenvoor",
+        "type" : "integer",
+        "label" : "Doelpunten voor"
+      }, {
+        "id" : "tegendoelpunten",
+        "type" : "integer",
+        "label" : "Doelpunten tegen"
+      }, {
+        "id" : "gewonnen",
+        "type" : "integer",
+        "label" : "Gewonnen"
+      }, {
+        "id" : "gelijkspel",
+        "type" : "integer",
+        "label" : "Gelijkspel"
+      }, {
+        "id" : "verloren",
+        "type" : "integer",
+        "label" : "Verloren"
+      }, {
+        "id" : "doelsaldo",
+        "type" : "integer",
+        "label" : "Doelsaldo"
+      }, {
+        "id" : "verliespunten",
+        "type" : "integer",
+        "label" : "Punten in mindering"
+      }, {
+        "id" : "eigenteam",
+        "type" : "boolean",
+        "label" : "eigenteam"
+      } ]
+    } ]
+  },
+  "programma" : {
+    "name" : "programma",
+    "input" : [ {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "null",
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    }, {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "null",
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "sorteervolgorde",
+      "description" : "Sorteervolgorde",
+      "type" : "string",
+      "optional" : true,
+      "default" : "datum",
+      "sourcearticle" : "keuzelijst-sorteervolgordes",
+      "sourcekey" : "sorteervolgorde"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "aantalregels",
+      "description" : "Maximum aantal regels",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "100"
+    }, {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "30"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "0"
+    }, {
+      "name" : "eigenwedstrijden",
+      "description" : "Eigenwedstrijden",
+      "type" : "string",
+      "optional" : true,
+      "default" : "JA",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "thuis",
+      "description" : "Thuis",
+      "type" : "string",
+      "optional" : true,
+      "default" : "JA",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "uit",
+      "description" : "Uit",
+      "type" : "string",
+      "optional" : true,
+      "default" : "JA",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "spelsoort",
+      "description" : "Spelsoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-spelsoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "competitiesoort",
+      "description" : "Competitiesoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-competitiesoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "dagsoort",
+      "description" : "Dagsoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-dagsoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "leeftijdscategorie",
+      "description" : "Leeftijdscategorie",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-leeftijdscategorieen",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "wedstrijdtype",
+      "description" : "Wedstrijdtype",
+      "type" : "string",
+      "optional" : true,
+      "sourcearticle" : "keuzelijst-wedstrijdtypes",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "key" : "wedstrijdcode",
+      "columns" : [ {
+        "id" : "wedstrijddatum",
+        "type" : "datetime",
+        "label" : "Datum"
+      }, {
+        "id" : "wedstrijdcode",
+        "type" : "integer",
+        "label" : "Wedstrijdcode"
+      }, {
+        "id" : "wedstrijdnummer",
+        "type" : "integer",
+        "label" : "Wedstrijdnummer"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Team"
+      }, {
+        "id" : "thuisteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Thuisteam-clubrelatiecode"
+      }, {
+        "id" : "uitteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Uitteam-clubrelatiecode"
+      }, {
+        "id" : "thuisteamid",
+        "type" : "integer",
+        "label" : "Thuisteamid"
+      }, {
+        "id" : "thuisteam",
+        "type" : "string",
+        "label" : "Thuisteam"
+      }, {
+        "id" : "thuisteamlogo",
+        "type" : "string",
+        "label" : "Thuisteam logo"
+      }, {
+        "id" : "uitteamid",
+        "type" : "integer",
+        "label" : "Uitteamid"
+      }, {
+        "id" : "uitteam",
+        "type" : "string",
+        "label" : "Uitteam"
+      }, {
+        "id" : "uitteamlogo",
+        "type" : "string",
+        "label" : "Uitteam logo"
+      }, {
+        "id" : "teamvolgorde",
+        "type" : "integer",
+        "label" : "Teamvolgorde"
+      }, {
+        "id" : "competitiesoort",
+        "type" : "string",
+        "label" : "Competitiesoort"
+      }, {
+        "id" : "competitie",
+        "type" : "string",
+        "label" : "Competitie"
+      }, {
+        "id" : "klasse",
+        "type" : "string",
+        "label" : "Klasse"
+      }, {
+        "id" : "poule",
+        "type" : "string",
+        "label" : "Poule"
+      }, {
+        "id" : "klassepoule",
+        "type" : "string",
+        "label" : "Klassepoule"
+      }, {
+        "id" : "kaledatum",
+        "type" : "string",
+        "label" : "Kaledatum"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "Datum"
+      }, {
+        "id" : "vertrektijd",
+        "type" : "clocktime",
+        "label" : "Vertrektijd"
+      }, {
+        "id" : "verzameltijd",
+        "type" : "clocktime",
+        "label" : "Verzameltijd"
+      }, {
+        "id" : "aanvangstijd",
+        "type" : "clocktime",
+        "label" : "Aanvangstijd"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "status",
+        "type" : "string",
+        "label" : "Status"
+      }, {
+        "id" : "scheidsrechters",
+        "type" : "string",
+        "label" : "Scheidsrechters"
+      }, {
+        "id" : "scheidsrechter",
+        "type" : "string",
+        "label" : "Scheidsrechter"
+      }, {
+        "id" : "accommodatie",
+        "type" : "string",
+        "label" : "Accommodatie"
+      }, {
+        "id" : "veld",
+        "type" : "string",
+        "label" : "Veld"
+      }, {
+        "id" : "locatie",
+        "type" : "string",
+        "label" : "Locatie"
+      }, {
+        "id" : "plaats",
+        "type" : "string",
+        "label" : "Plaats"
+      }, {
+        "id" : "rijders",
+        "type" : "string",
+        "label" : "Rijders"
+      }, {
+        "id" : "kleedkamerthuisteam",
+        "type" : "string",
+        "label" : "Kleedkamerthuisteam"
+      }, {
+        "id" : "kleedkameruitteam",
+        "type" : "string",
+        "label" : "Kleedkameruitteam"
+      }, {
+        "id" : "kleedkamerscheidsrechter",
+        "type" : "string",
+        "label" : "Kleedkamerscheidsrechter"
+      }, {
+        "id" : "meer",
+        "type" : "link",
+        "label" : "Meer",
+        "target" : "wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}"
+      } ]
+    } ]
+  },
+  "keuzelijst-teamsoorten" : {
+    "name" : "keuzelijst-teamsoorten",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "teampoulelijst" : {
+    "name" : "teampoulelijst",
+    "input" : [ {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "poulecode",
+        "type" : "integer",
+        "label" : "Poulecode"
+      }, {
+        "id" : "teamcode",
+        "type" : "integer",
+        "label" : "Teamcode"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      } ]
+    } ]
+  },
+  "kleuren-clubdata" : {
+    "name" : "kleuren-clubdata",
+    "input" : [ ],
+    "output" : [ {
+      "kleuren" : {
+        "header" : {
+          "label" : "Headerkleur",
+          "type" : "string"
+        },
+        "menu" : {
+          "label" : "Menukleur",
+          "type" : "string"
+        },
+        "achtergrond" : {
+          "label" : "Achtergrondkleur",
+          "type" : "string"
+        },
+        "tekst" : {
+          "label" : "Tekstkleur",
+          "type" : "string"
+        },
+        "menuselectie" : {
+          "label" : "Menuselectiekleur",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "wedstrijd-statistieken" : {
+    "name" : "wedstrijd-statistieken",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "thuisteam" : {
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "thuisgewonnen" : {
+          "label" : "Thuis gewonnen",
+          "type" : "string"
+        },
+        "uitgewonnen" : {
+          "label" : "Uit gewonnen",
+          "type" : "string"
+        },
+        "percentagegewonnen" : {
+          "label" : "Procent gewonnen",
+          "type" : "string"
+        },
+        "percentagethuisgewonnen" : {
+          "label" : "Procent thuis gewonnen",
+          "type" : "string"
+        },
+        "percentageuitgewonnen" : {
+          "label" : "Procent uit gewonnen",
+          "type" : "string"
+        }
+      }
+    }, {
+      "uitteam" : {
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "thuisgewonnen" : {
+          "label" : "Thuis gewonnen",
+          "type" : "string"
+        },
+        "uitgewonnen" : {
+          "label" : "Uit gewonnen",
+          "type" : "string"
+        },
+        "percentagegewonnen" : {
+          "label" : "Procent gewonnen",
+          "type" : "string"
+        },
+        "percentagethuisgewonnen" : {
+          "label" : "Procent thuis gewonnen",
+          "type" : "string"
+        },
+        "percentageuitgewonnen" : {
+          "label" : "Procent uit gewonnen",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "poulestand" : {
+    "name" : "poulestand",
+    "input" : [ {
+      "name" : "poulecode",
+      "description" : "Poule code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "poulelijst",
+      "sourcekey" : "poulecode"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "highlight" : "eigenteam",
+      "columns" : [ {
+        "id" : "positie",
+        "type" : "integer",
+        "label" : "Positie"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Team"
+      }, {
+        "id" : "clubrelatiecode",
+        "type" : "string",
+        "label" : "Clubrelatiecode"
+      }, {
+        "id" : "clublogo",
+        "type" : "string",
+        "label" : "Club logo"
+      }, {
+        "id" : "gespeeldewedstrijden",
+        "type" : "integer",
+        "label" : "Gespeelde wedstrijden"
+      }, {
+        "id" : "gewonnen",
+        "type" : "integer",
+        "label" : "Gewonnen"
+      }, {
+        "id" : "gelijk",
+        "type" : "integer",
+        "label" : "Gelijk"
+      }, {
+        "id" : "verloren",
+        "type" : "integer",
+        "label" : "Verloren"
+      }, {
+        "id" : "doelpuntenvoor",
+        "type" : "integer",
+        "label" : "Doelpunten voor"
+      }, {
+        "id" : "doelpuntentegen",
+        "type" : "integer",
+        "label" : "Doelpunten tegen"
+      }, {
+        "id" : "doelsaldo",
+        "type" : "integer",
+        "label" : "Doelsaldo"
+      }, {
+        "id" : "verliespunten",
+        "type" : "integer",
+        "label" : "Punten in mindering"
+      }, {
+        "id" : "punten",
+        "type" : "integer",
+        "label" : "Punten"
+      }, {
+        "id" : "eigenteam",
+        "type" : "boolean",
+        "label" : "Eigenteam",
+        "hidden" : "true"
+      } ]
+    } ]
+  },
+  "pouleuitslagen" : {
+    "name" : "pouleuitslagen",
+    "input" : [ {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "14"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "-2"
+    }, {
+      "name" : "poulecode",
+      "description" : "Poule code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "poulelijst",
+      "sourcekey" : "poulecode"
+    }, {
+      "name" : "eigenwedstrijden",
+      "description" : "Eigenwedstrijden",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ja",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "sorteervolgorde",
+      "description" : "Sorteervolgorde",
+      "type" : "string",
+      "optional" : true,
+      "default" : "datum",
+      "sourcearticle" : "keuzelijst-sorteervolgordes",
+      "sourcekey" : "sorteervolgorde"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "highlight" : "eigenteam",
+      "columns" : [ {
+        "id" : "wedstrijdcode",
+        "type" : "integer",
+        "label" : "Wedstrijdcode"
+      }, {
+        "id" : "wedstrijddatum",
+        "type" : "datetime",
+        "label" : "Datum"
+      }, {
+        "id" : "wedstrijdnummer",
+        "type" : "integer",
+        "label" : "Wedstrijdnummer"
+      }, {
+        "id" : "accommodatie",
+        "type" : "string",
+        "label" : "Accommodatie"
+      }, {
+        "id" : "datumopgemaakt",
+        "type" : "string",
+        "label" : "Datum opgemaakt"
+      }, {
+        "id" : "aanvangstijd",
+        "type" : "date",
+        "label" : "Aanvangstijd"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "datum"
+      }, {
+        "id" : "thuisteamid",
+        "type" : "string",
+        "label" : "Thuisteamid"
+      }, {
+        "id" : "thuisteam",
+        "type" : "string",
+        "label" : "Thuisteam"
+      }, {
+        "id" : "uitteamid",
+        "type" : "string",
+        "label" : "Uitteamid"
+      }, {
+        "id" : "uitteam",
+        "type" : "string",
+        "label" : "Uitteam"
+      }, {
+        "id" : "thuisteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Thuisteam-clubrelatiecode"
+      }, {
+        "id" : "uitteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Uitteam-clubrelatiecode"
+      }, {
+        "id" : "uitslag",
+        "type" : "string",
+        "label" : "Uitslag"
+      }, {
+        "id" : "eigenteam",
+        "type" : "boolean",
+        "label" : "eigenteam",
+        "hidden" : "true"
+      }, {
+        "id" : "status",
+        "type" : "string",
+        "label" : "status"
+      }, {
+        "id" : "meer",
+        "type" : "link",
+        "label" : "Meer",
+        "target" : "wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}"
+      } ]
+    } ]
+  },
+  "vrijwilligerstaken" : {
+    "name" : "vrijwilligerstaken",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "vrijwilligerstaakcode",
+        "type" : "integer",
+        "label" : "Code"
+      }, {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "taakbeheerder",
+        "type" : "string",
+        "label" : "Taakbeheerder"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "Omschrijving"
+      }, {
+        "id" : "startdatum",
+        "type" : "datetime",
+        "label" : "Startdatum"
+      }, {
+        "id" : "einddatum",
+        "type" : "datetime",
+        "label" : "Einddatum"
+      }, {
+        "id" : "locatie",
+        "type" : "string",
+        "label" : "Locatie"
+      } ]
+    } ]
+  },
+  "keuzelijst-leeftijdscategorieen" : {
+    "name" : "keuzelijst-leeftijdscategorieen",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "teams" : {
+    "name" : "teams",
+    "input" : [ {
+      "name" : "competitieperiode",
+      "description" : "Competitieperiode",
+      "type" : "string",
+      "optional" : true,
+      "default" : "",
+      "sourcearticle" : "keuzelijst-competitieperiode",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "teamsoort",
+      "description" : "Teamsoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-teamsoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "geslacht",
+      "description" : "Geslacht",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-geslacht",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "spelsoort",
+      "description" : "Spelsoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-spelsoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "competitiesoort",
+      "description" : "Competitiesoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-competitiesoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "leeftijdscategorie",
+      "description" : "Leeftijdscategorie",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-leeftijdscategorieen",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "key" : "poulecode",
+      "columns" : [ {
+        "id" : "teamcode",
+        "type" : "integer",
+        "label" : "Teamcode"
+      }, {
+        "id" : "lokaleteamcode",
+        "type" : "integer",
+        "label" : "Lokaleteamcode"
+      }, {
+        "id" : "poulecode",
+        "type" : "integer",
+        "label" : "Poulecode"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      }, {
+        "id" : "competitienaam",
+        "type" : "string",
+        "label" : "Competitienaam"
+      }, {
+        "id" : "klasse",
+        "type" : "string",
+        "label" : "Klasse"
+      }, {
+        "id" : "poule",
+        "type" : "string",
+        "label" : "Poule"
+      }, {
+        "id" : "klassepoule",
+        "type" : "string",
+        "label" : "Klassepoule"
+      }, {
+        "id" : "spelsoort",
+        "type" : "string",
+        "label" : "Spelsoort"
+      }, {
+        "id" : "competitiesoort",
+        "type" : "string",
+        "label" : "Competitiesoort"
+      }, {
+        "id" : "geslacht",
+        "type" : "string",
+        "label" : "Geslacht"
+      }, {
+        "id" : "teamsoort",
+        "type" : "string",
+        "label" : "Teamsoort"
+      }, {
+        "id" : "leeftijdscategorie",
+        "type" : "string",
+        "label" : "Leeftijdscategorie"
+      }, {
+        "id" : "kalespelsoort",
+        "type" : "string",
+        "label" : "Spelsoort"
+      }, {
+        "id" : "speeldag",
+        "type" : "string",
+        "label" : "Speeldag"
+      }, {
+        "id" : "speeldagteam",
+        "type" : "string",
+        "label" : "Speeldagteam"
+      }, {
+        "id" : "more",
+        "type" : "link",
+        "label" : "Meer",
+        "target" : "team-indeling?teamcode=${teamcode}&lokaleteamcode=${lokaleteamcode}"
+      } ]
+    } ]
+  },
+  "verenigingsactiviteiten" : {
+    "name" : "verenigingsactiviteiten",
+    "input" : [ {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "7"
+    }, {
+      "name" : "kalendersoort",
+      "description" : "Filter op kalender soort",
+      "type" : "string",
+      "optional" : true
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "kalendernaam",
+        "type" : "string",
+        "label" : "Kalendernaam"
+      }, {
+        "id" : "kalendersoort",
+        "type" : "string",
+        "label" : "Kalendersoort"
+      }, {
+        "id" : "activiteit",
+        "type" : "string",
+        "label" : "Activiteit"
+      }, {
+        "id" : "datumvan",
+        "type" : "datetime",
+        "label" : "Datum van"
+      }, {
+        "id" : "datumtm",
+        "type" : "datetime",
+        "label" : "Datum t/m"
+      }, {
+        "id" : "heledag",
+        "type" : "boolean",
+        "label" : "Hele dag"
+      }, {
+        "id" : "beheerders",
+        "type" : "string",
+        "label" : "Beheerders"
+      }, {
+        "id" : "opmerkingen",
+        "type" : "string",
+        "label" : "Opmerkingen"
+      }, {
+        "id" : "plaats",
+        "type" : "string",
+        "label" : "Locatie"
+      }, {
+        "id" : "url",
+        "type" : "string",
+        "label" : "URL"
+      } ]
+    } ]
+  },
+  "wedstrijd-kleedkamers" : {
+    "name" : "wedstrijd-kleedkamers",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "kleedkamers" : {
+        "scheidsrechters-kleedkamer" : {
+          "label" : "Scheidsrechterskleedkamer"
+        },
+        "thuisteam-kleedkamer" : {
+          "label" : "Thuisteamkleedkamer"
+        },
+        "uitteam-kleedkamer" : {
+          "label" : "Uitteamkleedkamer"
+        }
+      }
+    } ]
+  },
+  "trainingenlijst" : {
+    "name" : "trainingenlijst",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "trainingid",
+        "type" : "integer",
+        "label" : "Trainingcode"
+      }, {
+        "id" : "trainingnaam",
+        "type" : "string",
+        "label" : "Trainingnaam"
+      }, {
+        "id" : "trainernaam1",
+        "type" : "string",
+        "label" : "Trainernaam1"
+      }, {
+        "id" : "trainernaam2",
+        "type" : "string",
+        "label" : "Trainernaam2"
+      } ]
+    } ]
+  },
+  "keuzelijst-verenigingsactiviteit-kalendersoorten" : {
+    "name" : "keuzelijst-verenigingsactiviteit-kalendersoorten",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "afgelastingen" : {
+    "name" : "afgelastingen",
+    "input" : [ {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "30"
+    }, {
+      "name" : "aantalregels",
+      "description" : "Maximum aantal regels",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "20"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "0"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "sorteervolgorde",
+      "description" : "Sorteervolgorde",
+      "type" : "string",
+      "optional" : true,
+      "default" : "datum",
+      "sourcearticle" : "keuzelijst-sorteervolgordes",
+      "sourcekey" : "sorteervolgorde"
+    } ],
+    "output" : [ {
+      "key" : "wedstrijdcode",
+      "columns" : [ {
+        "id" : "wedstrijdcode",
+        "type" : "integer",
+        "label" : "Code"
+      }, {
+        "id" : "wedstrijdnummer",
+        "type" : "integer",
+        "label" : "Wedstrijdnummer"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      }, {
+        "id" : "thuisteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Thuisteam-clubrelatiecode"
+      }, {
+        "id" : "uitteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Uitteam-clubrelatiecode"
+      }, {
+        "id" : "thuisteam",
+        "type" : "string",
+        "label" : "Thuisteam"
+      }, {
+        "id" : "thuisteamid",
+        "type" : "string",
+        "label" : "Thuisteamid"
+      }, {
+        "id" : "thuisteamlogo",
+        "type" : "string",
+        "label" : "Thuisteam logo"
+      }, {
+        "id" : "uitteam",
+        "type" : "string",
+        "label" : "Uitteam"
+      }, {
+        "id" : "uitteamid",
+        "type" : "string",
+        "label" : "Uitteamid"
+      }, {
+        "id" : "uitteamlogo",
+        "type" : "string",
+        "label" : "Uitteam logo"
+      }, {
+        "id" : "accommodatie",
+        "type" : "string",
+        "label" : "Accommodatie"
+      }, {
+        "id" : "teamvolgorde",
+        "type" : "string",
+        "label" : "Teamvolgorde"
+      }, {
+        "id" : "rijders",
+        "type" : "string",
+        "label" : "Rijders"
+      }, {
+        "id" : "scheidsrechters",
+        "type" : "string",
+        "label" : "Scheidsrechters"
+      }, {
+        "id" : "veld",
+        "type" : "string",
+        "label" : "Veld"
+      }, {
+        "id" : "zaalofveld",
+        "type" : "string",
+        "label" : "Zaal of veld"
+      }, {
+        "id" : "vertrektijd",
+        "type" : "string",
+        "label" : "Vertrektijd"
+      }, {
+        "id" : "aanvangstijd",
+        "type" : "string",
+        "label" : "Aanvangstijd"
+      }, {
+        "id" : "status",
+        "type" : "string",
+        "label" : "Status"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "Datum"
+      }, {
+        "id" : "wedstrijddatum",
+        "type" : "datetime",
+        "label" : "Wedstrijddatum"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "plaats",
+        "type" : "string",
+        "label" : "Plaats"
+      }, {
+        "id" : "info",
+        "type" : "link",
+        "label" : "Wedstrijdinformatie",
+        "target" : "wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}"
+      } ]
+    } ]
+  },
+  "vrijwilligers" : {
+    "name" : "vrijwilligers",
+    "input" : [ {
+      "name" : "vrijwilligerstaakcode",
+      "description" : "Vrijwilligerstaakcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "vrijwilligerstaken",
+      "sourcekey" : "vrijwilligerstaakcode"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "0"
+    }, {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "30"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "datumvanaf",
+        "type" : "datetime",
+        "label" : "Datum vanaf"
+      }, {
+        "id" : "datumtot",
+        "type" : "datetime",
+        "label" : "Datum tot"
+      }, {
+        "id" : "tijdvanaf",
+        "type" : "string",
+        "label" : "Tijd vanaf"
+      }, {
+        "id" : "tijdtot",
+        "type" : "string",
+        "label" : "Tijd tot"
+      }, {
+        "id" : "lokatie",
+        "type" : "string",
+        "label" : "Lokatie"
+      }, {
+        "id" : "heledag",
+        "type" : "string",
+        "label" : "Hele dag"
+      } ]
+    } ]
+  },
+  "verjaardagen" : {
+    "name" : "verjaardagen",
+    "input" : [ {
+      "name" : "aantaldagen",
+      "description" : "Aantal dagen",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "21"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "verjaardag",
+        "type" : "string",
+        "label" : "Verjaardag"
+      }, {
+        "id" : "volledigenaam",
+        "type" : "string",
+        "label" : "Naam"
+      } ]
+    } ]
+  },
+  "keuzelijst-periodenummers" : {
+    "name" : "keuzelijst-periodenummers",
+    "input" : [ {
+      "name" : "poulecode",
+      "description" : "Poulecode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "poulelijst",
+      "sourcekey" : "poulecode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "integer",
+        "label" : "Periodenummer"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "Omschrijving"
+      }, {
+        "id" : "huidig",
+        "type" : "string",
+        "label" : "Huidige periodenummer"
+      } ]
+    } ]
+  },
+  "wedstrijd-thuisteam" : {
+    "name" : "wedstrijd-thuisteam",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    }, {
+      "name" : "toonlidfoto",
+      "description" : "Toon foto van lid",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "relatiecode",
+        "type" : "string",
+        "label" : "Lidcode"
+      }, {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "rol",
+        "type" : "string",
+        "label" : "Rol"
+      }, {
+        "id" : "einddatum",
+        "type" : "string",
+        "label" : "Einddatum"
+      }, {
+        "id" : "functie",
+        "type" : "string",
+        "label" : "Functie"
+      }, {
+        "id" : "email",
+        "type" : "email",
+        "label" : "E-mail"
+      }, {
+        "id" : "email2",
+        "type" : "email",
+        "label" : "Secundaire e-mail"
+      }, {
+        "id" : "telefoon",
+        "type" : "string",
+        "label" : "Telefoonnummer"
+      }, {
+        "id" : "telefoon2",
+        "type" : "string",
+        "label" : "Secundaire telefoonnummer"
+      }, {
+        "id" : "mobiel",
+        "type" : "string",
+        "label" : "Mobiel"
+      }, {
+        "id" : "foto",
+        "type" : "binary",
+        "label" : "Foto"
+      } ]
+    } ]
+  },
+  "kleuren-clubtv" : {
+    "name" : "kleuren-clubtv",
+    "input" : [ ],
+    "output" : [ {
+      "kleuren" : {
+        "primair" : {
+          "label" : "Primairekleur",
+          "type" : "string"
+        },
+        "secundair" : {
+          "label" : "Secundairekleur",
+          "type" : "string"
+        },
+        "tekst" : {
+          "label" : "Tekstkleur",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "uitslagen" : {
+    "name" : "uitslagen",
+    "input" : [ {
+      "name" : "wedstrijdtype",
+      "description" : "Wedstrijdtype",
+      "type" : "string",
+      "optional" : true,
+      "sourcearticle" : "keuzelijst-wedstrijdtypes",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "null",
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "null",
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    }, {
+      "name" : "aantalregels",
+      "description" : "Aantal regels",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "100"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "-1"
+    }, {
+      "name" : "aantaldagen",
+      "description" : "Aantal dagen",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "7"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "sorteervolgorde",
+      "description" : "Sorteervolgorde",
+      "type" : "string",
+      "optional" : true,
+      "default" : "datum",
+      "sourcearticle" : "keuzelijst-sorteervolgordes",
+      "sourcekey" : "sorteervolgorde"
+    }, {
+      "name" : "eigenwedstrijden",
+      "description" : "Eigenwedstrijden",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ja",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "thuis",
+      "description" : "Thuis",
+      "type" : "string",
+      "optional" : true,
+      "default" : "JA",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "uit",
+      "description" : "Uit",
+      "type" : "string",
+      "optional" : true,
+      "default" : "JA",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "spelsoort",
+      "description" : "Spelsoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-spelsoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "leeftijdscategorie",
+      "description" : "Leeftijdscategorie",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-leeftijdscategorieen",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "competitiesoort",
+      "description" : "Competitiesoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-competitiesoorten",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "dagsoort",
+      "description" : "Dagsoort",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-dagsoorten",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "wedstrijddatum",
+        "type" : "datetime",
+        "label" : "Datum"
+      }, {
+        "id" : "wedstrijdcode",
+        "type" : "integer",
+        "label" : "Wedstrijdcode"
+      }, {
+        "id" : "wedstrijdnummer",
+        "type" : "integer",
+        "label" : "Wedstrijdnummer"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "Datum"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "datumopgemaakt",
+        "type" : "string",
+        "label" : "Datum opgemaakt"
+      }, {
+        "id" : "accommodatie",
+        "label" : "Accommodatie"
+      }, {
+        "id" : "aanvangstijd",
+        "type" : "clocktime",
+        "label" : "Aanvangstijd"
+      }, {
+        "id" : "thuisteam",
+        "type" : "string",
+        "label" : "Thuisteam"
+      }, {
+        "id" : "thuisteamid",
+        "type" : "string",
+        "label" : "Thuisteamid"
+      }, {
+        "id" : "thuisteamlogo",
+        "type" : "string",
+        "label" : "Thuisteam logo"
+      }, {
+        "id" : "thuisteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Thuisteam-clubrelatiecode"
+      }, {
+        "id" : "uitteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Uitteam-clubrelatiecode"
+      }, {
+        "id" : "uitteam",
+        "type" : "string",
+        "label" : "Uitteam"
+      }, {
+        "id" : "uitteamid",
+        "type" : "string",
+        "label" : "Uitteamid"
+      }, {
+        "id" : "uitteamlogo",
+        "type" : "string",
+        "label" : "Uitteam logo"
+      }, {
+        "id" : "uitslag",
+        "type" : "string",
+        "label" : "Uitslag"
+      }, {
+        "id" : "uitslag-regulier",
+        "type" : "string",
+        "label" : "Uitslag regulier"
+      }, {
+        "id" : "uitslag-nv",
+        "type" : "string",
+        "label" : "Uitslag na verlenging"
+      }, {
+        "id" : "uitslag-s",
+        "type" : "string",
+        "label" : "Uitslag strafschoppen"
+      }, {
+        "id" : "competitienaam",
+        "type" : "string",
+        "label" : "Competitienaam"
+      }, {
+        "id" : "competitiesoort",
+        "type" : "string",
+        "label" : "Competitiesoort"
+      }, {
+        "id" : "eigenteam",
+        "type" : "boolean",
+        "label" : "Eigenteam"
+      }, {
+        "id" : "sportomschrijving",
+        "type" : "string",
+        "label" : "Sportomschrijving"
+      }, {
+        "id" : "verenigingswedstrijd",
+        "type" : "string",
+        "label" : "Verenigingswedstrijd"
+      }, {
+        "id" : "status",
+        "type" : "string",
+        "label" : "status"
+      }, {
+        "id" : "meer",
+        "type" : "link",
+        "label" : "Meer",
+        "target" : "wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}"
+      } ]
+    } ]
+  },
+  "commissie-details" : {
+    "name" : "commissie-details",
+    "input" : [ {
+      "name" : "commissiecode",
+      "description" : "Commissie code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "commissies",
+      "sourcekey" : "commissiecode"
+    } ],
+    "output" : [ {
+      "commissiedetails" : {
+        "commissienaam" : {
+          "label" : "Commissienaam",
+          "type" : "string"
+        },
+        "afbeelding" : {
+          "label" : "Afbeelding",
+          "type" : "binary"
+        },
+        "omschrijving" : {
+          "label" : "Omschrijving",
+          "type" : "string"
+        },
+        "opmerkingen" : {
+          "label" : "Opmerkingen",
+          "type" : "string"
+        },
+        "telefoon" : {
+          "label" : "Telefoon",
+          "type" : "string"
+        },
+        "mobiel" : {
+          "label" : "Mobiel",
+          "type" : "string"
+        },
+        "email" : {
+          "label" : "E-mail",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "wedstrijd-historische-resultaten" : {
+    "name" : "wedstrijd-historische-resultaten",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "seizoen",
+        "type" : "string",
+        "label" : "Seizoen"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "Datum"
+      }, {
+        "id" : "wedstrijddatum",
+        "type" : "string",
+        "label" : "Wedstrijddatum"
+      }, {
+        "id" : "wedstrijddatetime",
+        "type" : "datetime",
+        "label" : "Wedstrijddatum"
+      }, {
+        "id" : "uitslag",
+        "type" : "string",
+        "label" : "Uitslag"
+      } ]
+    } ]
+  },
+  "mijn-diplomas" : {
+    "name" : "mijn-diplomas",
+    "scopes" : [ "PERSON" ],
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "diploma",
+        "type" : "string",
+        "label" : "Diploma"
+      }, {
+        "id" : "type",
+        "type" : "string",
+        "label" : "Type"
+      }, {
+        "id" : "startdatum",
+        "type" : "string",
+        "label" : "Startdatum"
+      }, {
+        "id" : "startdatetime",
+        "type" : "datetime",
+        "label" : "Startdatum"
+      }, {
+        "id" : "einddatum",
+        "type" : "string",
+        "label" : "Einddatum"
+      }, {
+        "id" : "opmerkingen",
+        "type" : "string",
+        "label" : "Opmerkingen"
+      } ]
+    } ]
+  },
+  "adresboek" : {
+    "name" : "adresboek",
+    "scopes" : [ "PERSON" ],
+    "input" : [ {
+      "name" : "achternaam",
+      "description" : "Achternaam",
+      "type" : "string",
+      "optional" : false
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "relatiecode",
+        "type" : "string",
+        "label" : "Relatiecode"
+      }, {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "adres",
+        "type" : "string",
+        "label" : "Adres"
+      }, {
+        "id" : "postcode",
+        "type" : "string",
+        "label" : "Postcode"
+      }, {
+        "id" : "plaats",
+        "type" : "string",
+        "label" : "Plaats"
+      }, {
+        "id" : "telefoonnummer",
+        "type" : "string",
+        "label" : "Telefoonnummer"
+      }, {
+        "id" : "mobielnummer",
+        "type" : "string",
+        "label" : "Mobiel"
+      }, {
+        "id" : "email",
+        "type" : "email",
+        "label" : "E-mail"
+      } ]
+    } ]
+  },
+  "wijzig-mijn-wachtwoord" : {
+    "name" : "wijzig-mijn-wachtwoord",
+    "scopes" : [ "PERSON" ],
+    "input" : [ {
+      "name" : "wachtwoord",
+      "description" : "Nieuw wachtwoord",
+      "type" : "string",
+      "optional" : false
+    } ],
+    "output" : [ {
+      "Result" : {
+        "IsSuccess" : {
+          "label" : "Success"
+        }
+      }
+    } ]
+  },
+  "keuzelijst-competitieperiode" : {
+    "name" : "keuzelijst-competitieperiode",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "mijn-gegevens" : {
+    "name" : "mijn-gegevens",
+    "scopes" : [ "PERSON" ],
+    "input" : [ ],
+    "output" : [ {
+      "Gegevens" : {
+        "relatiecode" : {
+          "label" : "relatiecode",
+          "type" : "string"
+        },
+        "achternaam" : {
+          "label" : "achternaam",
+          "type" : "string"
+        },
+        "tussenvoegsel" : {
+          "label" : "tussenvoegsel",
+          "type" : "string"
+        },
+        "voornaam" : {
+          "label" : "voornaam",
+          "type" : "string"
+        },
+        "initialen" : {
+          "label" : "initialen",
+          "type" : "string"
+        },
+        "bijnaam" : {
+          "label" : "bijnaam",
+          "type" : "string"
+        },
+        "geslacht" : {
+          "label" : "geslacht",
+          "type" : "string"
+        },
+        "leeftijd" : {
+          "label" : "leeftijd",
+          "type" : "integer"
+        },
+        "geboortedatum" : {
+          "label" : "geboortedatum",
+          "type" : "string"
+        },
+        "geboortedatetime" : {
+          "label" : "geboortedatetime",
+          "type" : "datetime"
+        },
+        "geboorteplaats" : {
+          "label" : "geboorteplaats",
+          "type" : "string"
+        },
+        "nationaliteit" : {
+          "label" : "nationaliteit",
+          "type" : "string"
+        },
+        "tweedenationaliteit" : {
+          "label" : "tweedenationaliteit",
+          "type" : "string"
+        }
+      }
+    }, {
+      "Adres" : {
+        "straatnaam" : {
+          "label" : "straatnaam",
+          "type" : "string"
+        },
+        "huisnummer" : {
+          "label" : "huisnummer",
+          "type" : "string"
+        },
+        "toevoeging" : {
+          "label" : "toevoeging",
+          "type" : "string"
+        },
+        "postcode" : {
+          "label" : "postcode",
+          "type" : "string"
+        },
+        "plaats" : {
+          "label" : "plaats",
+          "type" : "string"
+        },
+        "land" : {
+          "label" : "land",
+          "type" : "string"
+        }
+      }
+    }, {
+      "Contact" : {
+        "afbeelding" : {
+          "label" : "afbeelding",
+          "type" : "binary"
+        },
+        "telefoonnummer" : {
+          "label" : "telefoonnummer",
+          "type" : "string"
+        },
+        "fax" : {
+          "label" : "fax",
+          "type" : "string"
+        },
+        "mobiel" : {
+          "label" : "mobiel",
+          "type" : "string"
+        },
+        "mobiel2" : {
+          "label" : "mobiel2",
+          "type" : "string"
+        },
+        "email" : {
+          "label" : "email",
+          "type" : "email"
+        },
+        "email2" : {
+          "label" : "email2",
+          "type" : "email"
+        }
+      }
+    }, {
+      "Account" : {
+        "bsn" : {
+          "label" : "bsn",
+          "type" : "string"
+        },
+        "iban" : {
+          "label" : "iban",
+          "type" : "string"
+        },
+        "bic" : {
+          "label" : "bic",
+          "type" : "string"
+        },
+        "identificatie" : {
+          "label" : "identificatie",
+          "type" : "string"
+        },
+        "identificatienummer" : {
+          "label" : "identificatienummer",
+          "type" : "string"
+        },
+        "lidsinds" : {
+          "label" : "lidsinds",
+          "type" : "date"
+        },
+        "lidsindsdatetime" : {
+          "label" : "lidsindsdatetime",
+          "type" : "datetime"
+        },
+        "privacyniveau" : {
+          "label" : "privacyniveau",
+          "type" : "boolean"
+        },
+        "gebruikerscode" : {
+          "label" : "gebruikerscode",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "mijn-factuurdetails" : {
+    "name" : "mijn-factuurdetails",
+    "scopes" : [ "PERSON" ],
+    "input" : [ {
+      "name" : "factuurcode",
+      "description" : "Factuur code",
+      "type" : "string",
+      "optional" : false,
+      "sourcearticle" : "mijn-facturen",
+      "sourcekey" : "factuurcode"
+    } ],
+    "output" : [ {
+      "factuurdetails" : {
+        "factuurcode" : {
+          "label" : "Factuurcode",
+          "type" : "string"
+        },
+        "seizoen" : {
+          "label" : "Seizoen",
+          "type" : "string"
+        },
+        "factuurdatum" : {
+          "label" : "Factuurdatum",
+          "type" : "string"
+        },
+        "factuurdatetime" : {
+          "label" : "Factuurdatum",
+          "type" : "datetime"
+        },
+        "kenmerk" : {
+          "label" : "Kenmerk",
+          "type" : "string"
+        },
+        "verwerkingsnummer" : {
+          "label" : "Verwerkingsnummer",
+          "type" : "integer"
+        },
+        "vervaldatum" : {
+          "label" : "Vervaldatum",
+          "type" : "string"
+        },
+        "vervaldatetime" : {
+          "label" : "Vervaldatum",
+          "type" : "datetime"
+        },
+        "debiteurnummer" : {
+          "label" : "Debiteurnummer",
+          "type" : "string"
+        },
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "betaaldatum" : {
+          "label" : "Betaaldatum",
+          "type" : "string"
+        },
+        "betaaldatetime" : {
+          "label" : "Betaaldatum",
+          "type" : "string"
+        },
+        "bedrag" : {
+          "label" : "Bedrag",
+          "type" : "money"
+        },
+        "omschrijving" : {
+          "label" : "Omschrijving",
+          "type" : "string"
+        },
+        "adres" : {
+          "label" : "Adres",
+          "type" : "string"
+        },
+        "postcodeplaats" : {
+          "label" : "Postcode",
+          "type" : "string"
+        },
+        "voldaan" : {
+          "label" : "Voldaan",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "trainingdetails" : {
+    "name" : "trainingdetails",
+    "input" : [ {
+      "name" : "trainingid",
+      "description" : "Training code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "trainingenlijst",
+      "sourcekey" : "trainingid"
+    }, {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "30"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "begindatum",
+        "type" : "datetime",
+        "label" : "Begindatum"
+      }, {
+        "id" : "einddatum",
+        "type" : "datetime",
+        "label" : "Einddatum"
+      }, {
+        "id" : "locatie",
+        "type" : "string",
+        "label" : "Locatie"
+      }, {
+        "id" : "kleedkamer",
+        "type" : "string",
+        "label" : "Kleedkamer"
+      }, {
+        "id" : "opmerkingen",
+        "type" : "string",
+        "label" : "Opmerkingen"
+      } ]
+    } ]
+  },
+  "clubgegevens" : {
+    "name" : "clubgegevens",
+    "input" : [ ],
+    "output" : [ {
+      "gegevens" : {
+        "thuisshirtkleur" : {
+          "label" : "Thuisshirtkleur",
+          "type" : "string"
+        },
+        "thuisbroekkleur" : {
+          "label" : "Thuisbroekkleur",
+          "type" : "string"
+        },
+        "thuissokkenkleur" : {
+          "label" : "Thuissokkenkleur",
+          "type" : "string"
+        },
+        "uitshirtkleur" : {
+          "label" : "Uitshirtkleur",
+          "type" : "string"
+        },
+        "uitbroekkleur" : {
+          "label" : "Uitbroekkleur",
+          "type" : "string"
+        },
+        "uitsokkenkleur" : {
+          "label" : "Uitsokkenkleur",
+          "type" : "string"
+        },
+        "clubcode" : {
+          "label" : "Clubcode",
+          "type" : "string"
+        },
+        "clubnaam" : {
+          "label" : "Clubnaam",
+          "type" : "string"
+        },
+        "informatie" : {
+          "label" : "Informatie",
+          "type" : "string"
+        },
+        "privacystatementclub" : {
+          "label" : "Tijdelijke url naar de privacy statement van de club",
+          "type" : "string"
+        },
+        "oprichtingsdatum" : {
+          "label" : "Oprichtingsdatum",
+          "type" : "string"
+        },
+        "oprichtingsdatetime" : {
+          "label" : "Oprichtingsdatum",
+          "type" : "datetime"
+        },
+        "telefoonnummer" : {
+          "label" : "Telefoonnummer",
+          "type" : "string"
+        },
+        "fax" : {
+          "label" : "Fax",
+          "type" : "string"
+        },
+        "email" : {
+          "label" : "Email",
+          "type" : "email"
+        },
+        "website" : {
+          "label" : "Website",
+          "type" : "string"
+        },
+        "facebook" : {
+          "label" : "Facebook",
+          "type" : "string"
+        },
+        "instagram" : {
+          "label" : "Instagram",
+          "type" : "string"
+        },
+        "twitter" : {
+          "label" : "Twitter",
+          "type" : "string"
+        },
+        "youtube" : {
+          "label" : "Youtube",
+          "type" : "string"
+        },
+        "straatnaam" : {
+          "label" : "Straatnaam",
+          "type" : "string"
+        },
+        "huisnummer" : {
+          "label" : "Huisnummer",
+          "type" : "string"
+        },
+        "nummertoevoeging" : {
+          "label" : "Nummertoevoeging",
+          "type" : "string"
+        },
+        "postcode" : {
+          "label" : "Postcode",
+          "type" : "string"
+        },
+        "plaats" : {
+          "label" : "Plaats",
+          "type" : "string"
+        },
+        "banknummer" : {
+          "label" : "Banknummer",
+          "type" : "string"
+        },
+        "tennamevan" : {
+          "label" : "Te name van",
+          "type" : "string"
+        },
+        "tennamevanplaats" : {
+          "label" : "Te name van plaats",
+          "type" : "string"
+        },
+        "naamsecretaris" : {
+          "label" : "Naam secretaris",
+          "type" : "string"
+        },
+        "kvknummer" : {
+          "label" : "KvK-nummer",
+          "type" : "string"
+        },
+        "logo" : {
+          "label" : "Logo",
+          "type" : "binary"
+        },
+        "kleinlogo" : {
+          "label" : "Klein logo",
+          "type" : "binary"
+        }
+      }
+    }, {
+      "bezoekadres" : {
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "straatnaam" : {
+          "label" : "Straatnaam",
+          "type" : "string"
+        },
+        "huisnummer" : {
+          "label" : "Huisnummer",
+          "type" : "string"
+        },
+        "nummertoevoeging" : {
+          "label" : "Nummertoevoeging",
+          "type" : "string"
+        },
+        "postcode" : {
+          "label" : "Postcode",
+          "type" : "string"
+        },
+        "plaats" : {
+          "label" : "Plaats",
+          "type" : "string"
+        },
+        "route" : {
+          "label" : "Route",
+          "type" : "map"
+        }
+      }
+    } ]
+  },
+  "keuzelijst-spelsoorten" : {
+    "name" : "keuzelijst-spelsoorten",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "keuzelijst-teampersoonrollen" : {
+    "name" : "keuzelijst-teampersoonrollen",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "team-indeling" : {
+    "name" : "team-indeling",
+    "input" : [ {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    }, {
+      "name" : "teampersoonrol",
+      "description" : "Filter rol",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-teampersoonrollen",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "toonlidfoto",
+      "description" : "Toon foto van lid",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "relatiecode",
+        "type" : "string",
+        "label" : "Lidcode"
+      }, {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "voornaam",
+        "type" : "string",
+        "label" : "Voornaam"
+      }, {
+        "id" : "achternaam",
+        "type" : "string",
+        "label" : "Achternaam"
+      }, {
+        "id" : "tussenvoegsel",
+        "type" : "string",
+        "label" : "Tussenvoegsel"
+      }, {
+        "id" : "geslacht",
+        "type" : "string",
+        "label" : "Geslacht"
+      }, {
+        "id" : "rol",
+        "type" : "string",
+        "label" : "Rol"
+      }, {
+        "id" : "functie",
+        "type" : "string",
+        "label" : "Functie"
+      }, {
+        "id" : "einddatum",
+        "type" : "string",
+        "label" : "Einddatum"
+      }, {
+        "id" : "email",
+        "type" : "email",
+        "label" : "E-mail"
+      }, {
+        "id" : "email2",
+        "type" : "email",
+        "label" : "Secundaire e-mail"
+      }, {
+        "id" : "telefoon",
+        "type" : "string",
+        "label" : "Telefoonnummer"
+      }, {
+        "id" : "telefoon2",
+        "type" : "string",
+        "label" : "Secundaire telefoonnummer"
+      }, {
+        "id" : "mobiel",
+        "type" : "string",
+        "label" : "Mobiel"
+      }, {
+        "id" : "foto",
+        "type" : "binary",
+        "label" : "Foto"
+      } ]
+    } ]
+  },
+  "team-gegevens" : {
+    "name" : "team-gegevens",
+    "input" : [ {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    } ],
+    "output" : [ {
+      "team" : {
+        "teamnaam" : {
+          "label" : "Teamnaam",
+          "type" : "string"
+        },
+        "begindatum" : {
+          "label" : "Begindatum",
+          "type" : "string"
+        },
+        "begindatetime" : {
+          "label" : "Begindatum",
+          "type" : "datetime"
+        },
+        "einddatum" : {
+          "label" : "Einddatum",
+          "type" : "string"
+        },
+        "einddatetime" : {
+          "label" : "Einddatum",
+          "type" : "datetime"
+        },
+        "competitie" : {
+          "label" : "Competitie",
+          "type" : "string"
+        },
+        "geslacht" : {
+          "label" : "Geslacht",
+          "type" : "string"
+        },
+        "categorie" : {
+          "label" : "Categorie",
+          "type" : "string"
+        },
+        "shirtkleur" : {
+          "label" : "Shirtkleur",
+          "type" : "string"
+        },
+        "broekkleur" : {
+          "label" : "Broekkleur",
+          "type" : "string"
+        },
+        "kousen" : {
+          "label" : "Kousen",
+          "type" : "string"
+        },
+        "omschrijving" : {
+          "label" : "Omschrijving",
+          "type" : "string"
+        },
+        "teamfoto" : {
+          "label" : "Teamfoto",
+          "type" : "binary"
+        }
+      }
+    } ]
+  },
+  "poule-indeling" : {
+    "name" : "poule-indeling",
+    "input" : [ {
+      "name" : "poulecode",
+      "description" : "Poule code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "poulelijst",
+      "sourcekey" : "poulecode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      }, {
+        "id" : "clubrelatiecode",
+        "type" : "string",
+        "label" : "Clubrelatiecode"
+      }, {
+        "id" : "speelnummer",
+        "type" : "int",
+        "label" : "Speelnummer"
+      }, {
+        "id" : "speeldag",
+        "type" : "string",
+        "label" : "Speeldag"
+      }, {
+        "id" : "starttijd",
+        "type" : "clocktime",
+        "label" : "Starttijd"
+      }, {
+        "id" : "eigenteam",
+        "type" : "boolean",
+        "label" : "Eigenteam",
+        "hidden" : "true"
+      } ]
+    } ]
+  },
+  "keuzelijst-dagsoorten" : {
+    "name" : "keuzelijst-dagsoorten",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "wijzig-mijn-gegevens" : {
+    "name" : "wijzig-mijn-gegevens",
+    "scopes" : [ "PERSON" ],
+    "input" : [ {
+      "name" : "tussenvoegsel",
+      "description" : "Tussenvoegsel",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "bijnaam",
+      "description" : "Bijnaam",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "geboorteplaats",
+      "description" : "Geboorteplaats",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "straatnaam",
+      "description" : "Straatnaam",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "huisnummer",
+      "description" : "Huisnummer",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "toevoeging",
+      "description" : "Toevoeging",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "postcode",
+      "description" : "Postcode",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "plaats",
+      "description" : "Plaats",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "land",
+      "description" : "Land",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "telefoonnummer",
+      "description" : "Telefoonnummer",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "fax",
+      "description" : "Fax",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "mobiel",
+      "description" : "Mobiel",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "mobiel2",
+      "description" : "Mobiel2",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "email",
+      "description" : "Email",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "bsn",
+      "description" : "bsn",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "iban",
+      "description" : "iban",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "bic",
+      "description" : "Bic",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "identificatie",
+      "description" : "Identificatie",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "identificatienummer",
+      "description" : "Identificatienummer",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "privacyniveau",
+      "description" : "Privacyniveau",
+      "type" : "string",
+      "optional" : true
+    } ],
+    "output" : [ ]
+  },
+  "wedstrijd-informatie" : {
+    "name" : "wedstrijd-informatie",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "wedstrijdinformatie" : {
+        "wedstrijdnummer" : {
+          "label" : "Wedstrijdnummer",
+          "type" : "integer"
+        },
+        "wedstijdnummerintern" : {
+          "label" : "Wedstijdnummerintern",
+          "type" : "integer"
+        },
+        "veldnaam" : {
+          "label" : "Veld"
+        },
+        "veldlocatie" : {
+          "label" : "Veldlocatie"
+        },
+        "vertrektijd" : {
+          "label" : "Vertrektijd"
+        },
+        "rijder" : {
+          "label" : "Rijder"
+        },
+        "thuisscore" : {
+          "label" : "Thuisscore"
+        },
+        "thuisscore-regulier" : {
+          "label" : "Thuisscore regulier"
+        },
+        "thuisscore-nv" : {
+          "label" : "Thuisscore na verlenging"
+        },
+        "thuisscore-s" : {
+          "label" : "Thuisscore strafschoppen"
+        },
+        "uitscore" : {
+          "label" : "Uitscore"
+        },
+        "uitscore-regulier" : {
+          "label" : "Uitscore regulier"
+        },
+        "uitscore-nv" : {
+          "label" : "Uitscore na verlenging"
+        },
+        "uitscore-s" : {
+          "label" : "Uitscore strafschoppen"
+        },
+        "klasse" : {
+          "label" : "Klasse"
+        },
+        "wedstrijdtype" : {
+          "label" : "Wedstrijdtype"
+        },
+        "competitietype" : {
+          "label" : "Competitietype"
+        },
+        "categorie" : {
+          "label" : "Categorie"
+        },
+        "wedstrijddatetime" : {
+          "label" : "Wedstrijddatum",
+          "type" : "datetime"
+        },
+        "wedstrijddatum" : {
+          "label" : "Wedstrijddatum",
+          "type" : "string"
+        },
+        "wedstrijddatumopgemaakt" : {
+          "label" : "Wedstrijddatum opgemaakt",
+          "type" : "string"
+        },
+        "aanvangstijd" : {
+          "label" : "Aanvangstijd"
+        },
+        "aanvangstijdopgemaakt" : {
+          "label" : "Aanvangstijd opgemaakt"
+        },
+        "duur" : {
+          "label" : "Duur"
+        },
+        "speltype" : {
+          "label" : "Speltype"
+        },
+        "aanduiding" : {
+          "label" : "Aanduiding"
+        },
+        "poulecode" : {
+          "label" : "Poulecode",
+          "type" : "integer"
+        },
+        "poule" : {
+          "label" : "Poule"
+        },
+        "thuisteamid" : {
+          "label" : "Thuisteamid",
+          "type" : "integer"
+        },
+        "thuisteam" : {
+          "label" : "Thuisteam"
+        },
+        "uitteamid" : {
+          "label" : "Uitteamid",
+          "type" : "integer"
+        },
+        "uitteam" : {
+          "label" : "Uitteam"
+        },
+        "opmerkingen" : {
+          "label" : "Opmerkingen"
+        }
+      }
+    }, {
+      "officials" : {
+        "verenigingsscheidsrechtercode" : {
+          "label" : "Verenigingsscheidsrechtercode"
+        },
+        "verenigingsscheidsrechter" : {
+          "label" : "Verenigingsscheidsrechter"
+        },
+        "overigeofficialcode" : {
+          "label" : "Overige officialcode"
+        },
+        "overigeofficial" : {
+          "label" : "Overige official"
+        }
+      }
+    }, {
+      "matchofficials" : {
+        "scheidsrechters" : {
+          "label" : "Scheidsrechters"
+        }
+      }
+    }, {
+      "kleedkamers" : {
+        "thuis" : {
+          "label" : "Thuis"
+        },
+        "uit" : {
+          "label" : "Uit"
+        },
+        "official" : {
+          "label" : "Official"
+        }
+      }
+    }, {
+      "accommodatie" : {
+        "naam" : {
+          "label" : "Naam"
+        },
+        "straat" : {
+          "label" : "Straat"
+        },
+        "plaats" : {
+          "label" : "Plaats"
+        },
+        "telefoon" : {
+          "label" : "Telefoonnummer"
+        },
+        "routeplanner" : {
+          "label" : "Routeplanner",
+          "type" : "map"
+        }
+      }
+    }, {
+      "thuisteam" : {
+        "naam" : {
+          "label" : "Naam"
+        },
+        "code" : {
+          "label" : "Code"
+        },
+        "website" : {
+          "label" : "Website"
+        },
+        "shirtkleur" : {
+          "label" : "Shirtkleur"
+        },
+        "straat" : {
+          "label" : "Straat"
+        },
+        "postcodeplaats" : {
+          "label" : "Postcode en plaats"
+        },
+        "telefoon" : {
+          "label" : "Telefoon"
+        },
+        "email" : {
+          "label" : "Email"
+        }
+      }
+    }, {
+      "uitteam" : {
+        "naam" : {
+          "label" : "Naam"
+        },
+        "code" : {
+          "label" : "Code"
+        },
+        "website" : {
+          "label" : "Website"
+        },
+        "shirtkleur" : {
+          "label" : "Shirtkleur"
+        },
+        "straat" : {
+          "label" : "Straat"
+        },
+        "postcodeplaats" : {
+          "label" : "Postcode en plaats"
+        },
+        "telefoon" : {
+          "label" : "Telefoon"
+        },
+        "email" : {
+          "label" : "Email"
+        }
+      }
+    } ]
+  },
+  "scheidsrechtersaanstellingen" : {
+    "name" : "scheidsrechtersaanstellingen",
+    "input" : [ {
+      "name" : "aantalregels",
+      "description" : "Maximum aantal regels",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "5"
+    }, {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "15"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "0"
+    }, {
+      "name" : "sorteervolgorde",
+      "description" : "Sorteervolgorde",
+      "type" : "string",
+      "optional" : true,
+      "default" : "datum",
+      "sourcearticle" : "keuzelijst-sorteervolgordes",
+      "sourcekey" : "sorteervolgorde"
+    } ],
+    "output" : [ {
+      "key" : "wedstrijdcode",
+      "columns" : [ {
+        "id" : "datetime",
+        "type" : "datetime",
+        "label" : "Datum"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "Datum"
+      }, {
+        "id" : "aanvangstijd",
+        "type" : "clocktime",
+        "label" : "Aanvangstijd"
+      }, {
+        "id" : "scheidsrechters",
+        "type" : "string",
+        "label" : "Scheidsrechter"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "wedstrijdcode",
+        "type" : "integer",
+        "label" : "Wedstrijdcode"
+      }, {
+        "id" : "wedstrijdnummer",
+        "type" : "integer",
+        "label" : "Wedstrijdnummer"
+      }, {
+        "id" : "info",
+        "type" : "link",
+        "label" : "Wedstrijdinformatie",
+        "target" : "wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}"
+      } ]
+    } ]
+  },
+  "keuzelijst-wedstrijdtypes" : {
+    "name" : "keuzelijst-wedstrijdtypes",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "mijn-financielegegevens" : {
+    "name" : "mijn-financielegegevens",
+    "scopes" : [ "PERSON" ],
+    "input" : [ ],
+    "output" : [ {
+      "Financieel" : {
+        "rekeningtype" : {
+          "label" : "rekeningtype",
+          "type" : "string"
+        },
+        "rekeningnummer" : {
+          "label" : "rekeningnummer",
+          "type" : "string"
+        },
+        "betaalwijze" : {
+          "label" : "betaalwijze",
+          "type" : "string"
+        },
+        "gezinshoofd" : {
+          "label" : "gezinshoofd",
+          "type" : "string"
+        },
+        "betaalperiode" : {
+          "label" : "betaalperiode",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "ical-team" : {
+    "name" : "ical-team",
+    "output" : [ {
+      "Result" : {
+        "iCal" : {
+          "label" : "iCal"
+        }
+      }
+    } ],
+    "scopes" : [ "ICAL" ],
+    "input" : [ ]
+  },
+  "mijn-commissies" : {
+    "name" : "mijn-commissies",
+    "scopes" : [ "PERSON" ],
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "commissiecode",
+        "type" : "integer",
+        "label" : "Commissiecode"
+      }, {
+        "id" : "commissienaam",
+        "type" : "string",
+        "label" : "Commissienaam"
+      }, {
+        "id" : "rol",
+        "type" : "string",
+        "label" : "Rol"
+      }, {
+        "id" : "details",
+        "type" : "link",
+        "label" : "Details",
+        "target" : "commissie-details?commissiecode=${commissiecode}"
+      }, {
+        "id" : "leden",
+        "type" : "link",
+        "label" : "Leden",
+        "target" : "commissie-leden?commissiecode=${commissiecode}"
+      } ]
+    } ]
+  },
+  "keuzelijst-boolean" : {
+    "name" : "keuzelijst-boolean",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "bestuur" : {
+    "name" : "bestuur",
+    "input" : [ ],
+    "output" : [ {
+      "voorzitter" : {
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "email" : {
+          "label" : "Email",
+          "type" : "email"
+        },
+        "email2" : {
+          "label" : "2e Email",
+          "type" : "email"
+        }
+      }
+    }, {
+      "secretaris" : {
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "email" : {
+          "label" : "Email",
+          "type" : "email"
+        },
+        "email2" : {
+          "label" : "2e Email",
+          "type" : "email"
+        }
+      }
+    }, {
+      "penningmeester" : {
+        "naam" : {
+          "label" : "Naam",
+          "type" : "string"
+        },
+        "email" : {
+          "label" : "Email",
+          "type" : "email"
+        },
+        "email2" : {
+          "label" : "2e Email",
+          "type" : "email"
+        }
+      }
+    } ]
+  },
+  "wedstrijd-accommodatie" : {
+    "name" : "wedstrijd-accommodatie",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "wedstrijd" : {
+        "thuisteam" : {
+          "label" : "Thuisteam"
+        },
+        "accommodatienaam" : {
+          "label" : "Accommodatienaam"
+        },
+        "adres" : {
+          "label" : "Straat"
+        },
+        "plaats" : {
+          "label" : "Plaats"
+        },
+        "telefoonnummer" : {
+          "label" : "Telefoonnummer"
+        },
+        "route" : {
+          "label" : "Route",
+          "type" : "map"
+        }
+      }
+    } ]
+  },
+  "poulelijst" : {
+    "name" : "poulelijst",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "poulecode",
+        "type" : "integer",
+        "label" : "Poulecode"
+      }, {
+        "id" : "publiekepoulecode",
+        "type" : "string",
+        "label" : "PubliekePoulecode"
+      }, {
+        "id" : "teamcode",
+        "type" : "integer",
+        "label" : "Teamcode"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      } ]
+    } ]
+  },
+  "info" : {
+    "name" : "info",
+    "input" : [ {
+      "name" : "client_id",
+      "description" : "Client id",
+      "type" : "string",
+      "optional" : false
+    } ],
+    "output" : [ {
+      "Info" : {
+        "ClientId" : {
+          "label" : "Client id",
+          "type" : "string"
+        },
+        "Bond" : {
+          "label" : "Bond",
+          "type" : "string"
+        }
+      }
+    } ]
+  },
+  "keuzelijst-geslacht" : {
+    "name" : "keuzelijst-geslacht",
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "waarde",
+        "type" : "string",
+        "label" : "waarde"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "omschrijving"
+      } ]
+    } ]
+  },
+  "aanmeldenaspirantlid-form" : {
+    "name" : "aanmeldenaspirantlid-form",
+    "input" : [ ],
+    "output" : [ {
+      "gegevens" : {
+        "voornaam" : {
+          "label" : "voornaam"
+        },
+        "tussenvoegsel" : {
+          "label" : "tussenvoegsel"
+        },
+        "achternaam" : {
+          "label" : "achternaam"
+        },
+        "initialen" : {
+          "label" : "initialen"
+        },
+        "geslacht" : {
+          "label" : "geslacht",
+          "type" : "selection"
+        },
+        "geboortedatum" : {
+          "label" : "geboortedatum"
+        },
+        "geboorteplaats" : {
+          "label" : "geboorteplaats"
+        },
+        "land" : {
+          "label" : "land",
+          "type" : "selection"
+        },
+        "nationaliteit" : {
+          "label" : "nationaliteit",
+          "type" : "selection"
+        },
+        "competitie" : {
+          "label" : "competitie",
+          "type" : "selection"
+        },
+        "sport" : {
+          "label" : "sport"
+        },
+        "bondssporten" : {
+          "label" : "bondssporten",
+          "type" : "selection"
+        },
+        "straatnaam" : {
+          "label" : "straatnaam"
+        },
+        "huisnummer" : {
+          "label" : "huisnummer"
+        },
+        "nummertoevoeging" : {
+          "label" : "nummertoevoeging"
+        },
+        "postcode" : {
+          "label" : "postcode"
+        },
+        "plaats" : {
+          "label" : "plaats"
+        },
+        "telefoonnummer" : {
+          "label" : "telefoonnummer"
+        },
+        "mobielnummer" : {
+          "label" : "mobielnummer"
+        },
+        "email" : {
+          "label" : "email"
+        },
+        "vrijedropdown2" : {
+          "label" : "vrijedropdown2",
+          "type" : "selection"
+        },
+        "omschrijvingvrijedropdown2" : {
+          "label" : "omschrijvingvrijedropdown2"
+        },
+        "vrijedropdown1" : {
+          "label" : "vrijedropdown1",
+          "type" : "selection"
+        },
+        "omschrijvingvrijedropdown1" : {
+          "label" : "omschrijvingvrijedropdown1"
+        },
+        "iban" : {
+          "label" : "iban"
+        },
+        "bic" : {
+          "label" : "bic"
+        },
+        "opmerkingen" : {
+          "label" : "opmerkingen"
+        },
+        "captcha" : {
+          "label" : "captcha"
+        },
+        "captchaimagestring" : {
+          "label" : "captchaimagestring"
+        }
+      }
+    } ]
+  },
+  "commissie-leden" : {
+    "name" : "commissie-leden",
+    "input" : [ {
+      "name" : "commissiecode",
+      "description" : "Commissie code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "commissies",
+      "sourcekey" : "commissiecode"
+    }, {
+      "name" : "toonlidfoto",
+      "description" : "Toon foto van lid",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "lid",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "rolid",
+        "type" : "string",
+        "label" : "RolId"
+      }, {
+        "id" : "rol",
+        "type" : "string",
+        "label" : "Rol"
+      }, {
+        "id" : "email",
+        "type" : "email",
+        "label" : "E-mail"
+      }, {
+        "id" : "email2",
+        "type" : "email",
+        "label" : "Secundaire e-mail"
+      }, {
+        "id" : "telefoon",
+        "type" : "string",
+        "label" : "Telefoonnummer"
+      }, {
+        "id" : "telefoon2",
+        "type" : "string",
+        "label" : "Secundaire telefoonnummer"
+      }, {
+        "id" : "mobiel",
+        "type" : "string",
+        "label" : "Mobiel"
+      }, {
+        "id" : "startdatum",
+        "type" : "string",
+        "label" : "Startdatum"
+      }, {
+        "id" : "startdatetime",
+        "type" : "datetime",
+        "label" : "Startdatum"
+      }, {
+        "id" : "einddatum",
+        "type" : "string",
+        "label" : "Einddatum"
+      }, {
+        "id" : "einddatetime",
+        "type" : "datetime",
+        "label" : "Einddatum"
+      }, {
+        "id" : "informatie",
+        "type" : "string",
+        "label" : "Informatie"
+      }, {
+        "id" : "adres",
+        "type" : "string",
+        "label" : "Adres"
+      }, {
+        "id" : "plaats",
+        "type" : "string",
+        "label" : "Plaats"
+      }, {
+        "id" : "foto",
+        "type" : "binary",
+        "label" : "Foto"
+      } ]
+    } ]
+  },
+  "wedstrijd-officials" : {
+    "name" : "wedstrijd-officials",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "officialnaam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "officialomschrijving",
+        "type" : "string",
+        "label" : "Functie"
+      }, {
+        "id" : "relatiecode",
+        "type" : "string",
+        "label" : "Relatienummer"
+      } ]
+    } ]
+  },
+  "wedstrijd-uitteam" : {
+    "name" : "wedstrijd-uitteam",
+    "input" : [ {
+      "name" : "wedstrijdcode",
+      "description" : "Wedstrijdcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "programma",
+      "sourcekey" : "wedstrijdcode"
+    }, {
+      "name" : "toonlidfoto",
+      "description" : "Toon foto van lid",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "relatiecode",
+        "type" : "string",
+        "label" : "Lidcode"
+      }, {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "rol",
+        "type" : "string",
+        "label" : "Rol"
+      }, {
+        "id" : "einddatum",
+        "type" : "string",
+        "label" : "Einddatum"
+      }, {
+        "id" : "functie",
+        "type" : "string",
+        "label" : "Functie"
+      }, {
+        "id" : "email",
+        "type" : "email",
+        "label" : "E-mail"
+      }, {
+        "id" : "email2",
+        "type" : "email",
+        "label" : "Secundaire e-mail"
+      }, {
+        "id" : "telefoon",
+        "type" : "string",
+        "label" : "Telefoonnummer"
+      }, {
+        "id" : "telefoon2",
+        "type" : "string",
+        "label" : "Secundaire telefoonnummer"
+      }, {
+        "id" : "mobiel",
+        "type" : "string",
+        "label" : "Mobiel"
+      }, {
+        "id" : "foto",
+        "type" : "binary",
+        "label" : "Foto"
+      } ]
+    } ]
+  },
+  "commissies" : {
+    "name" : "commissies",
+    "input" : [ ],
+    "output" : [ {
+      "key" : "commissiecode",
+      "columns" : [ {
+        "id" : "commissiecode",
+        "type" : "string",
+        "label" : "Commissiecode"
+      }, {
+        "id" : "commissienaam",
+        "type" : "string",
+        "label" : "Commissienaam"
+      }, {
+        "id" : "omschrijving",
+        "type" : "string",
+        "label" : "Omschrijving"
+      }, {
+        "id" : "foto",
+        "type" : "binary",
+        "label" : "Foto"
+      }, {
+        "id" : "opmerkingen",
+        "type" : "string",
+        "label" : "Opmerkingen"
+      }, {
+        "id" : "telefoon",
+        "type" : "string",
+        "label" : "Telefoon"
+      }, {
+        "id" : "mobiel",
+        "type" : "string",
+        "label" : "Mobiel"
+      }, {
+        "id" : "email",
+        "type" : "string",
+        "label" : "E-mail"
+      }, {
+        "id" : "details",
+        "type" : "link",
+        "label" : "Details",
+        "target" : "commissie-details?commissiecode=${commissiecode}"
+      }, {
+        "id" : "leden",
+        "type" : "link",
+        "label" : "Leden",
+        "target" : "commissie-leden?commissiecode=${commissiecode}"
+      } ]
+    } ]
+  },
+  "mijn-facturen" : {
+    "name" : "mijn-facturen",
+    "scopes" : [ "PERSON" ],
+    "input" : [ {
+      "name" : "factuurstatus",
+      "description" : "Factuur status",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ALLES",
+      "sourcearticle" : "keuzelijst-factuurstatussen",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "factuurcode",
+        "type" : "integer",
+        "label" : "Factuurcode"
+      }, {
+        "id" : "factuurnummer",
+        "type" : "string",
+        "label" : "Type"
+      }, {
+        "id" : "datum",
+        "type" : "string",
+        "label" : "Startdatum"
+      }, {
+        "id" : "factuurdatum",
+        "type" : "datetime",
+        "label" : "Startdatum"
+      }, {
+        "id" : "betaald",
+        "type" : "string",
+        "label" : "Betaald"
+      }, {
+        "id" : "bedrag",
+        "type" : "money",
+        "label" : "Bedrag"
+      }, {
+        "id" : "openstaand",
+        "type" : "money",
+        "label" : "Openstaand"
+      }, {
+        "id" : "details",
+        "type" : "link",
+        "label" : "Details",
+        "target" : "mijn-factuurdetails?factuurcode=${factuurcode}"
+      } ]
+    } ]
+  },
+  "mijn-machtigingen" : {
+    "name" : "mijn-machtigingen",
+    "scopes" : [ "PERSON" ],
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "machtigingskenmerk",
+        "type" : "string",
+        "label" : "Machtigingskenmerk"
+      }, {
+        "id" : "machtigingssoort",
+        "type" : "string",
+        "label" : "Machtigingssoort"
+      }, {
+        "id" : "uitgiftedatum",
+        "type" : "string",
+        "label" : "Uitgiftedatum"
+      }, {
+        "id" : "uitgiftedatetime",
+        "type" : "datetime",
+        "label" : "Uitgiftedatum"
+      }, {
+        "id" : "bevestigingsdatum",
+        "type" : "string",
+        "label" : "Bevestigingsdatum"
+      }, {
+        "id" : "bevestigingsdatetime",
+        "type" : "datetime",
+        "label" : "Bevestigingsdatum"
+      }, {
+        "id" : "begindatum",
+        "type" : "string",
+        "label" : "Begindatum"
+      }, {
+        "id" : "begindatetime",
+        "type" : "datetime",
+        "label" : "Begindatum"
+      }, {
+        "id" : "einddatum",
+        "type" : "string",
+        "label" : "Einddatum"
+      }, {
+        "id" : "einddatetime",
+        "type" : "datetime",
+        "label" : "Einddatum"
+      }, {
+        "id" : "frequentie",
+        "type" : "string",
+        "label" : "Frequentie"
+      }, {
+        "id" : "maximumbedrag",
+        "type" : "money",
+        "label" : "Maximumbedrag"
+      }, {
+        "id" : "opmerkingen",
+        "type" : "string",
+        "label" : "Opmerkingen"
+      } ]
+    } ]
+  },
+  "mijn-factuurdetailsregels" : {
+    "name" : "mijn-factuurdetailsregels",
+    "scopes" : [ "PERSON" ],
+    "input" : [ {
+      "name" : "factuurcode",
+      "description" : "Factuurcode",
+      "type" : "string",
+      "optional" : false,
+      "sourcearticle" : "mijn-facturen",
+      "sourcekey" : "factuurcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "transactiecode",
+        "type" : "string",
+        "label" : "Transactiecode"
+      }, {
+        "id" : "transactiebedrag",
+        "type" : "string",
+        "label" : "Bedrag"
+      }, {
+        "id" : "transactieitempersoon",
+        "type" : "string",
+        "label" : "Persoon"
+      }, {
+        "id" : "transactiebeschrijving",
+        "type" : "string",
+        "label" : "Beschrijving"
+      } ]
+    } ]
+  },
+  "poule-programma" : {
+    "name" : "poule-programma",
+    "input" : [ {
+      "name" : "poulecode",
+      "description" : "Poule code",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "poulelijst",
+      "sourcekey" : "poulecode"
+    }, {
+      "name" : "aantaldagen",
+      "description" : "Maximum aantal dagen vooruit",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "30"
+    }, {
+      "name" : "weekoffset",
+      "description" : "Weeknummer vanaf nu",
+      "type" : "integer",
+      "optional" : true,
+      "default" : "0"
+    }, {
+      "name" : "eigenwedstrijden",
+      "description" : "Eigenwedstrijden",
+      "type" : "string",
+      "optional" : true,
+      "default" : "ja",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    }, {
+      "name" : "gebruiklokaleteamgegevens",
+      "description" : "Gebruik lokale teamnamen",
+      "type" : "string",
+      "optional" : true,
+      "default" : "NEE",
+      "sourcearticle" : "keuzelijst-boolean",
+      "sourcekey" : "waarde"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "wedstrijdcode",
+        "type" : "integer",
+        "label" : "Wedstrijdcode"
+      }, {
+        "id" : "wedstrijddatum",
+        "type" : "datetime",
+        "label" : "Datum"
+      }, {
+        "id" : "datum",
+        "type" : "date",
+        "label" : "Datum"
+      }, {
+        "id" : "aanvangstijd",
+        "type" : "clocktime",
+        "label" : "Tijd"
+      }, {
+        "id" : "thuisteam",
+        "type" : "string",
+        "label" : "Thuis"
+      }, {
+        "id" : "uitteam",
+        "type" : "string",
+        "label" : "Uit"
+      }, {
+        "id" : "thuisteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Thuisteam-clubrelatiecode"
+      }, {
+        "id" : "uitteamclubrelatiecode",
+        "type" : "string",
+        "label" : "Uitteam-clubrelatiecode"
+      }, {
+        "id" : "accommodatie",
+        "type" : "string",
+        "label" : "Accommodatie"
+      }, {
+        "id" : "plaats",
+        "type" : "string",
+        "label" : "Plaats"
+      }, {
+        "id" : "status",
+        "type" : "string",
+        "label" : "Status"
+      }, {
+        "id" : "wedstrijdnummer",
+        "type" : "string",
+        "label" : "Wedstrijdnummer"
+      }, {
+        "id" : "datumopgemaakt",
+        "type" : "string",
+        "label" : "Datumopgemaakt"
+      }, {
+        "id" : "wedstrijd",
+        "type" : "string",
+        "label" : "Wedstrijd"
+      }, {
+        "id" : "thuisteamid",
+        "type" : "string",
+        "label" : "Thuisteamid"
+      }, {
+        "id" : "uitteamid",
+        "type" : "string",
+        "label" : "uitteamid"
+      }, {
+        "id" : "eigenteam",
+        "type" : "boolean",
+        "label" : "eigenteam"
+      }, {
+        "id" : "meer",
+        "type" : "link",
+        "label" : "Meer",
+        "target" : "wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}"
+      } ]
+    } ]
+  },
+  "clublogo" : {
+    "name" : "clublogo",
+    "output" : [ {
+      "ClubData" : {
+        "Logo" : {
+          "label" : "Logo"
+        }
+      }
+    } ],
+    "input" : [ ]
+  },
+  "ical-person" : {
+    "name" : "ical-person",
+    "output" : [ {
+      "Result" : {
+        "iCal" : {
+          "label" : "iCal"
+        }
+      }
+    } ],
+    "scopes" : [ "ICAL" ],
+    "input" : [ ]
+  },
+  "mijn-teams" : {
+    "name" : "mijn-teams",
+    "scopes" : [ "PERSON" ],
+    "input" : [ ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "poulecode",
+        "type" : "integer",
+        "label" : "Poulecode"
+      }, {
+        "id" : "teamcode",
+        "type" : "integer",
+        "label" : "Teamcode"
+      }, {
+        "id" : "lokaleteamcode",
+        "type" : "integer",
+        "label" : "Lokale teamcode"
+      }, {
+        "id" : "teamnaam",
+        "type" : "string",
+        "label" : "Teamnaam"
+      }, {
+        "id" : "isspeler",
+        "type" : "string",
+        "label" : "Is speler?"
+      }, {
+        "id" : "functiecode",
+        "type" : "string",
+        "label" : "Functiecode"
+      }, {
+        "id" : "functieomschrijving",
+        "type" : "string",
+        "label" : "Functieomschrijving"
+      }, {
+        "id" : "rolcode",
+        "type" : "string",
+        "label" : "Rolcode"
+      }, {
+        "id" : "rolomschrijving",
+        "type" : "string",
+        "label" : "Rolomschrijving"
+      }, {
+        "id" : "spelactiviteit",
+        "type" : "string",
+        "label" : "Spelactiviteit"
+      } ]
+    } ]
+  },
+  "aanmeldenaspirantlid" : {
+    "name" : "aanmeldenaspirantlid",
+    "input" : [ {
+      "name" : "voornaam",
+      "description" : "Voornaam",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "tussenvoegsel",
+      "description" : "Tussenvoegsel(s)",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "achternaam",
+      "description" : "Achternaam",
+      "type" : "string",
+      "optional" : false
+    }, {
+      "name" : "initialen",
+      "description" : "Initialen",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "geslacht",
+      "description" : "Geslacht",
+      "type" : "string",
+      "optional" : false
+    }, {
+      "name" : "geboortedatum",
+      "description" : "Geboortedatum",
+      "type" : "string",
+      "optional" : false
+    }, {
+      "name" : "geboorteplaats",
+      "description" : "Geboorteplaats",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "land",
+      "description" : "Land",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "nationaliteit",
+      "description" : "Nationaliteit",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "competitie",
+      "description" : "Competitie",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "sport",
+      "description" : "Sport",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "bondssporten",
+      "description" : "Bondssporten",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "straatnaam",
+      "description" : "Straatnaam",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "huisnummer",
+      "description" : "Huisnummer",
+      "type" : "string",
+      "optional" : false
+    }, {
+      "name" : "nummertoevoeging",
+      "description" : "Toevoeging huisnummer",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "postcode",
+      "description" : "Postcode",
+      "type" : "string",
+      "optional" : false
+    }, {
+      "name" : "plaats",
+      "description" : "Plaats",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "telefoonnummer",
+      "description" : "Telefoon",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "mobielnummer",
+      "description" : "Mobiel",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "email",
+      "description" : "E-mail",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "vrijedropdown1",
+      "description" : "Vrijedropdown 1",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "vrijedropdown2",
+      "description" : "Vrijedropdown 2",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "iban",
+      "description" : "IBAN",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "bic",
+      "description" : "BIC",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "opmerkingen",
+      "description" : "Opmerkingen",
+      "type" : "string",
+      "optional" : true
+    }, {
+      "name" : "captcha",
+      "description" : "Captcha",
+      "type" : "string",
+      "optional" : false
+    }, {
+      "name" : "captchaimagestring",
+      "description" : "Captcha",
+      "type" : "string",
+      "optional" : false
+    } ],
+    "output" : [ ]
+  },
+  "team-sponsors" : {
+    "name" : "team-sponsors",
+    "input" : [ {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      }, {
+        "id" : "website",
+        "type" : "string",
+        "label" : "Website"
+      }, {
+        "id" : "opmerkingen",
+        "type" : "string",
+        "label" : "Opmerkingen"
+      }, {
+        "id" : "begindatum",
+        "type" : "string",
+        "label" : "Begindatum"
+      }, {
+        "id" : "begindatetime",
+        "type" : "datetime",
+        "label" : "Begindatum"
+      }, {
+        "id" : "logo",
+        "type" : "binary",
+        "label" : "Logo"
+      } ]
+    } ]
+  },
+  "team-trainingenlijst" : {
+    "name" : "team-trainingenlijst",
+    "input" : [ {
+      "name" : "teamcode",
+      "description" : "Teamcode",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "teamcode"
+    }, {
+      "name" : "lokaleteamcode",
+      "description" : "Teamcode lokaal",
+      "type" : "integer",
+      "optional" : false,
+      "sourcearticle" : "teams",
+      "sourcekey" : "lokaleteamcode"
+    } ],
+    "output" : [ {
+      "columns" : [ {
+        "id" : "trainingid",
+        "type" : "integer",
+        "label" : "TrainingId"
+      }, {
+        "id" : "naam",
+        "type" : "string",
+        "label" : "Naam"
+      } ]
+    } ]
+  }
+}

@@ -7,11 +7,11 @@
  * @author    Gary Jones
  * @link      http://github.com/GaryJones/Gamajo-Template-Loader
  * @copyright 2013 Gary Jones
- * @license   GPL-2.0-or-later
- * @version   1.3.1
+ * @license   GPL-2.0+
+ * @version   1.3.0
  */
 
-if (!class_exists('Gamajo_Template_Loader')) {
+if (! class_exists('Gamajo_Template_Loader')) {
 
 	/**
 	 * Template loader.
@@ -107,6 +107,7 @@ if (!class_exists('Gamajo_Template_Loader')) {
 		 * @param string $slug Template slug.
 		 * @param string $name Optional. Template variation name. Default null.
 		 * @param bool   $load Optional. Whether to load template. Default true.
+		 *
 		 * @return string
 		 */
 		public function get_template_part($slug, $name = null, $load = true)
@@ -135,6 +136,7 @@ if (!class_exists('Gamajo_Template_Loader')) {
 		 * @param mixed  $data     Custom data for the template.
 		 * @param string $var_name Optional. Variable under which the custom data is available in the template.
 		 *                         Default is 'data'.
+		 *
 		 * @return Gamajo_Template_Loader
 		 */
 		public function set_template_data($data, $var_name = 'data')
@@ -143,8 +145,8 @@ if (!class_exists('Gamajo_Template_Loader')) {
 
 			$wp_query->query_vars[$var_name] = (object) $data;
 
-			// Add $var_name to custom variable store if not default value.
-			if ('data' !== $var_name) {
+			// Add $var_name to custom variable store if not default value
+			if ($var_name !== 'data') {
 				$this->template_data_var_names[] = $var_name;
 			}
 
@@ -164,10 +166,10 @@ if (!class_exists('Gamajo_Template_Loader')) {
 		{
 			global $wp_query;
 
-			// Remove any duplicates from the custom variable store.
+			// Remove any duplicates from the custom variable store
 			$custom_var_names = array_unique($this->template_data_var_names);
 
-			// Remove each custom data reference from $wp_query.
+			// Remove each custom data reference from $wp_query
 			foreach ($custom_var_names as $var) {
 				if (isset($wp_query->query_vars[$var])) {
 					unset($wp_query->query_vars[$var]);
@@ -184,6 +186,7 @@ if (!class_exists('Gamajo_Template_Loader')) {
 		 *
 		 * @param string $slug Template slug.
 		 * @param string $name Template variation name.
+		 *
 		 * @return array
 		 */
 		protected function get_template_file_names($slug, $name)
@@ -222,12 +225,13 @@ if (!class_exists('Gamajo_Template_Loader')) {
 		 * @param bool         $load           If true the template file will be loaded if it is found.
 		 * @param bool         $require_once   Whether to require_once or require. Default true.
 		 *                                     Has no effect if $load is false.
+		 *
 		 * @return string The template filename if one is located.
 		 */
 		public function locate_template($template_names, $load = false, $require_once = true)
 		{
 
-			// Use $template_names as a cache key - either first element of array or the variable itself if it's a string.
+			// Use $template_names as a cache key - either first element of array or the variable itself if it's a string
 			$cache_key = is_array($template_names) ? $template_names[0] : $template_names;
 
 			// If the key is in the cache array, we've already located this file.
@@ -251,7 +255,7 @@ if (!class_exists('Gamajo_Template_Loader')) {
 					foreach ($template_paths as $template_path) {
 						if (file_exists($template_path . $template_name)) {
 							$located = $template_path . $template_name;
-							// Store the template path in the cache.
+							// Store the template path in the cache
 							$this->template_path_cache[$cache_key] = $located;
 							break 2;
 						}
@@ -287,7 +291,7 @@ if (!class_exists('Gamajo_Template_Loader')) {
 			);
 
 			// Only add this conditionally, so non-child themes don't redundantly check active theme twice.
-			if (get_stylesheet_directory() !== get_template_directory()) {
+			if (is_child_theme()) {
 				$file_paths[1] = trailingslashit(get_stylesheet_directory()) . $theme_directory;
 			}
 

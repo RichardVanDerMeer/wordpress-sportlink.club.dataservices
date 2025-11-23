@@ -1,16 +1,16 @@
 <style>
-	.sportlink-admin-fixtures {
+	.sportlink-admin-results {
 		margin-top: 20px;
 	}
 
-	.sportlink-admin-fixtures th {
+	.sportlink-admin-results th {
 		text-align: left;
 		padding: 10px;
 		background: #f0f0f1;
 		font-weight: 600;
 	}
 
-	.sportlink-admin-fixtures td {
+	.sportlink-admin-results td {
 		padding: 10px;
 		border-bottom: 1px solid #e0e0e0;
 	}
@@ -134,12 +134,13 @@
 	}
 </style>
 
-<table class="form-table sportlink-admin-fixtures">
+<table class="form-table sportlink-admin-results">
 	<thead>
 		<tr valign="top">
 			<th>Datum</th>
 			<th>Tijd</th>
 			<th>Wedstrijd</th>
+			<th>Uitslag</th>
 			<th>Wedstrijdnummer</th>
 		</tr>
 	</thead>
@@ -155,7 +156,7 @@
 				$dateFormatted = date_i18n('l j F Y', strtotime($fixture->wedstrijddatum));
 		?>
 				<tr class="sportlink-date-header">
-					<td colspan="4"><?php echo esc_html($dateFormatted); ?></td>
+					<td colspan="5"><?php echo esc_html($dateFormatted); ?></td>
 				</tr>
 			<?php
 			}
@@ -169,6 +170,9 @@
 					<a href="#" class="sportlink-match-link" data-wedstrijdcode="<?php echo esc_attr($fixture->wedstrijdcode); ?>">
 						<?php echo esc_html($fixture->wedstrijd); ?>
 					</a>
+				</td>
+				<td>
+					<?php echo !empty($fixture->uitslag) ? esc_html($fixture->uitslag) : '-'; ?>
 				</td>
 				<td>
 					<a href="#" class="sportlink-match-link sportlink-match-number" data-wedstrijdcode="<?php echo esc_attr($fixture->wedstrijdcode); ?>">
@@ -220,7 +224,9 @@
 			if (event.key === 'Escape' && modal.is(':visible')) {
 				modal.hide();
 			}
-		}); // Match link click
+		});
+
+		// Match link click
 		$('.sportlink-match-link').on('click', function(e) {
 			e.preventDefault();
 			var wedstrijdcode = $(this).data('wedstrijdcode');

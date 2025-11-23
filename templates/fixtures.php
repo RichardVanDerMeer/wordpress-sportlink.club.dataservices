@@ -13,13 +13,13 @@
 		?>
 			<tr class="fixtures__fixture">
 				<td class="fixtures__date">
-					<?php echo date_i18n('d M', strtotime($fixture->wedstrijddatum)); ?>
+					<?php echo esc_html(date_i18n('d M', strtotime($fixture->wedstrijddatum))); ?>
 				</td>
 				<td class="fixtures__time">
-					<?php echo $date->format("H:i"); ?>
+					<?php echo esc_html($date->format("H:i")); ?>
 				</td>
 				<td class="fixtures__match">
-					<?php echo $fixture->wedstrijd; ?>
+					<?php echo esc_html($fixture->wedstrijd); ?>
 				</td>
 			</tr>
 		<?php
