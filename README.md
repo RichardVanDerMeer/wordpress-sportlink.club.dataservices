@@ -9,6 +9,7 @@ WordPress plugin voor het tonen van wedstrijdprogramma's, uitslagen, standen en 
 ## ✨ Nieuwe Features (v1.2.0)
 
 ### 🎯 API Interface Klasse
+
 Een volledig nieuwe, gestructureerde PHP interface voor de Sportlink API:
 
 - **Type-safe methoden** voor alle API endpoints
@@ -18,18 +19,21 @@ Een volledig nieuwe, gestructureerde PHP interface voor de Sportlink API:
 - **Kant-en-klare voorbeelden** die je direct kunt gebruiken
 
 ### 🛡️ Verbeterde Beveiliging
+
 - Input sanitization op alle user input
 - Output escaping in templates
 - Nonce verificatie voor admin acties
 - API parameter validatie met whitelisting
 
 ### ⚡ Prestatie Optimalisaties
+
 - WordPress Transients API voor efficiënte caching
 - Request-level caching voorkomt dubbele API calls
 - Lazy loading van team data
 - Geoptimaliseerde HTTP requests
 
 ### 🔒 Resilience Features
+
 - Circuit breaker pattern (3-failure threshold)
 - Stale cache fallback (tot 7 dagen)
 - Timeout optimization (8 seconden)
@@ -227,6 +231,7 @@ Ga naar **Instellingen → Sportlink**:
 ### Dashboard Widget
 
 Bekijk de API status in je WordPress dashboard:
+
 - ✓ Operationeel (groen)
 - ⚡ Instabiel (geel)
 - ⚠️ Niet beschikbaar (rood)
@@ -244,6 +249,7 @@ De plugin gebruikt Gamajo Template Loader voor flexibele templates.
 ### Custom Templates
 
 Kopieer een template naar je theme:
+
 ```
 /wp-content/themes/jouw-theme/sportlink/standings.php
 ```
@@ -284,19 +290,23 @@ De plugin implementeert WordPress security best practices:
 ## 🆘 Troubleshooting
 
 ### "API niet geconfigureerd"
+
 - Check of Client ID is ingevuld in Instellingen → Sportlink
 - Controleer of de Client ID correct is
 
 ### "Kon data niet ophalen"
+
 - Check het dashboard widget voor API status
 - Kijk in de WordPress debug log voor details
 - Test de API handmatig: `https://data.sportlink.com/clubgegevens?client_id=JOUW_ID`
 
 ### Data wordt niet ververst
+
 - Klik op "Cache leegmaken" in de plugin instellingen
 - Check of de cache tijd niet te hoog is ingesteld
 
 ### Circuit breaker actief
+
 - De API is tijdelijk niet bereikbaar
 - Er wordt automatisch oude cache gebruikt
 - De circuit breaker reset na 5 minuten
@@ -304,6 +314,7 @@ De plugin implementeert WordPress security best practices:
 ## 📝 Changelog
 
 ### Version 1.2.0
+
 - ✨ Nieuwe API Interface klasse toegevoegd
 - 🛡️ Verbeterde beveiliging (input sanitization, output escaping)
 - ⚡ Performance optimalisaties (transients, lazy loading)
@@ -312,6 +323,7 @@ De plugin implementeert WordPress security best practices:
 - 📚 Uitgebreide documentatie en voorbeelden
 
 ### Version 1.1.0
+
 - Basis functionaliteit
 - Shortcode support
 - Template systeem

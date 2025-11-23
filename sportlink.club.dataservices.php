@@ -692,6 +692,12 @@ class SportlinkClient
 	private $ageCategories = array(
 		'senioren' => 999,
 		'senioren vrouwen' => 995,
+		'JO23' => 239,
+		'MO23' => 235,
+		'JO22' => 229,
+		'MO22' => 225,
+		'JO21' => 219,
+		'MO21' => 215,
 		'JO20' => 209,
 		'MO20' => 205,
 		'JO19' => 199,
